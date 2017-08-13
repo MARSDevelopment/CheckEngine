@@ -133,8 +133,7 @@ public class SettingsActivity extends AppCompatActivity {
             return convertView;
         }
 
-        //Contains the components that'll be in each lis
-        //hi this is alex veldman
+        //Contains the components that'll be in each ListView item
         public class CarListItemHolder {
             TextView itemHeader;
             TextView itemValue;

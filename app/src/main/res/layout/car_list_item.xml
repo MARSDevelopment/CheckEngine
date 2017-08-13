@@ -21,21 +21,17 @@
         android:textAlignment="viewStart"
         android:textSize="16dp" />
 
-    <TextView
-        android:id="@+id/txtCarItemValue"
-        android:layout_width="wrap_content"
+    <EditText
+        android:id="@+id/txtEditCarItemValue"
+        android:layout_width="250dp"
         android:layout_height="wrap_content"
-        android:layout_alignBottom="@+id/txtCarItemHeader"
-        android:layout_alignParentEnd="true"
-        android:layout_alignParentRight="true"
+        android:padding="10dp"
+        android:textCursorDrawable="@null"
+        android:textColor="#ff0004"
         android:layout_alignParentTop="true"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true"
+        android:layout_toRightOf="@+id/txtCarItemHeader"
         android:layout_toEndOf="@+id/txtCarItemHeader"
-        android:gravity="bottom|end"
-        android:paddingBottom="5dp"
-        android:text="Value"
-        android:textSize="14dp"
-
-        android:textCursorDrawable= "@drawable/cursor_color"
-
-        />
+        android:layout_alignBottom="@+id/txtCarItemHeader" />
 </RelativeLayout>
