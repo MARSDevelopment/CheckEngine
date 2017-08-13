@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.support.annotation.LayoutRes;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.design.widget.TextInputEditText;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.text.InputType;
@@ -83,6 +84,22 @@ public class SettingsActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
+    public String  GetCarHeaderByPosition( int position){
+
+        CarXMLHandler carXMLHandler = new CarXMLHandler();
+        XmlResourceParser xmlResourceParser = getResources().getXml(R.xml.custom);
+        CarValues carValues = carXMLHandler.ParseCarXMLHanlder(xmlResourceParser);
+        return carValues.carItemsHasMap.keySet().toArray()[position].toString();
+    }
+
+    public String  GetCarValueByPosition( int position){
+
+        CarXMLHandler carXMLHandler = new CarXMLHandler();
+        XmlResourceParser xmlResourceParser = getResources().getXml(R.xml.custom);
+        CarValues carValues = carXMLHandler.ParseCarXMLHanlder(xmlResourceParser);
+        return carValues.carItemsHasMap.values().toArray()[position].toString();
+    }
+
     private class CarListAdapter extends ArrayAdapter<String> {
         private int carItemLayout;
 
@@ -108,8 +125,8 @@ public class SettingsActivity extends AppCompatActivity {
                     final CarListItemHolder carListItemHolder = new CarListItemHolder();
                     carListItemHolder.itemHeader = (TextView)convertView.findViewById(R.id.txtCarItemHeader);
                     carListItemHolder.itemValue = (EditText)convertView.findViewById(R.id.txtEditCarItemValue);
-                    carListItemHolder.itemHeader.setText(carValues.carItemsHasMap.keySet().toArray()[position].toString());
-                    carListItemHolder.itemValue.setText(carValues.carItemsHasMap.values().toArray()[position].toString());
+                    carListItemHolder.itemHeader.setText(GetCarHeaderByPosition(position));
+                    carListItemHolder.itemValue.setText(GetCarValueByPosition(position));
                     carListItemHolder.itemValue.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v)
@@ -126,8 +143,8 @@ public class SettingsActivity extends AppCompatActivity {
             } else {
                 //keeps the position of the ListView
                 mainCarListItemHolder = (CarListItemHolder) convertView.getTag();
-                mainCarListItemHolder.itemHeader.setText(carValues.carItemsHasMap.keySet().toArray()[position].toString());
-                mainCarListItemHolder.itemValue.setText(carValues.carItemsHasMap.values().toArray()[position].toString());
+                mainCarListItemHolder.itemHeader.setText(GetCarHeaderByPosition(position));
+                mainCarListItemHolder.itemValue.setText(GetCarValueByPosition(position));
             }
 
             return convertView;
