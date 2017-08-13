@@ -1,13 +1,15 @@
 package com.example.action_laptop.checkengine;
 
+import android.content.Intent;
+import android.content.res.XmlResourceParser;
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.Button;
+import android.widget.TextView;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -15,17 +17,34 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        //variables
+        Button btnWriteXML = (Button)findViewById(R.id.btnWriteXML);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+
         setSupportActionBar(toolbar);
 
-       FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
+        btnWriteXML.setOnClickListener(
+            new Button.OnClickListener(){
+                public void onClick(View v){
+                    TextView txtCreate = (TextView)findViewById(R.id.txtCreated);
+                    CarXMLHandler carXMLHandler = new CarXMLHandler();
+
+                    try{
+                        XmlResourceParser xmlResourceParser = getResources().getXml(R.xml.custom);
+                        CarValues carValues = carXMLHandler.ParseCarXMLHanlder(xmlResourceParser);
+
+                        if(carValues != null){
+                            txtCreate.setText("Your file was read.");
+                        } else{
+                            txtCreate.setText("fail.");
+                        }
+                    } catch (Exception ex){
+                        Exception exception = ex;
+                    }
+                }
             }
-        });
+        );
     }
 
     @Override
@@ -40,11 +59,23 @@ public class MainActivity extends AppCompatActivity {
         // Handle action bar item clicks here. The action bar will
         // automatically handle clicks on the Home/Up button, so long
         // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
+        Intent intent;
 
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
+        switch (item.getItemId()){
+            case R.id.action_settings:
+                intent = new Intent(this, SettingsActivity.class);
+                startActivity(intent);
+                break;
+            case R.id.action_notifications:
+                // TODO Handle Notification Menu Item
+//                intent = new Intent(this, SettingsActivity.class);
+//                startActivity(intent);
+                break;
+            default:
+                //defaults to home page
+                intent = new Intent(this, MainActivity.class);
+                startActivity(intent);
+                break;
         }
 
         return super.onOptionsItemSelected(item);

@@ -1,4 +1,36 @@
 <resources>
     <string name="app_name">Check Engine</string>
+
+    //Dropdown Menu Strings
+    <string name="action_home">Home</string>
     <string name="action_settings">Settings</string>
+    <string name="action_notifications">Notifications</string>
+
+    //Car Categories Strings
+    <string name="engine">Engine</string>
+    <string name="wheels">Wheels</string>
+    <string name="fluids">Fluids</string>
+
+    //Car Item Strings
+    <string name="timing_belts">Timing Belts</string>
+    <string name="solenoid">Solenoid</string>
+    <string name="alternator">Alternator</string>
+    <string name="starter">Starter</string>
+    <string name="air_filter">Air Filter</string>
+    <string name="disc_brakes">Disc Brakes</string>
+    <string name="drum_brakes">Drum Brakes</string>
+    <string name="rotors">Rotors</string>
+    <string name="tires">Tires</string>
+    <string name="rotate">Rotate</string>
+    <string name="alignment">Alignment</string>
+    <string name="oil">Enging Oil</string>
+    <string name="brake">Brake Fluid</string>
+    <string name="auto_transmission">Automatic Transmission Fluid</string>
+    <string name="manual_transmission">Manual Transmission Fluid</string>
+    <string name="radiator">Radiator Fluid</string>
+    <string name="power_steering">Power Steering Fluid</string>
+    <string name="coolant">Coolant</string>
+    <string name="title_activity_settings">Settings</string>
+
+
 </resources>
