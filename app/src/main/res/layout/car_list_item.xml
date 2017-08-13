@@ -27,11 +27,14 @@
         android:layout_height="wrap_content"
         android:padding="10dp"
         android:textCursorDrawable="@null"
-        android:textColor="#ff0004"
+        android:textColor="#000"
+        android:background="@android:color/transparent"
+        android:gravity="right"
         android:layout_alignParentTop="true"
         android:layout_alignParentRight="true"
         android:layout_alignParentEnd="true"
         android:layout_toRightOf="@+id/txtCarItemHeader"
         android:layout_toEndOf="@+id/txtCarItemHeader"
         android:layout_alignBottom="@+id/txtCarItemHeader" />
+
 </RelativeLayout>

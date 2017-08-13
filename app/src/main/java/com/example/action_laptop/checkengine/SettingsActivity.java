@@ -16,10 +16,10 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.TextView;
 
-import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -107,7 +107,7 @@ public class SettingsActivity extends AppCompatActivity {
 
                     final CarListItemHolder carListItemHolder = new CarListItemHolder();
                     carListItemHolder.itemHeader = (TextView)convertView.findViewById(R.id.txtCarItemHeader);
-                    carListItemHolder.itemValue = (TextView)convertView.findViewById(R.id.txtCarItemValue);
+                    carListItemHolder.itemValue = (EditText)convertView.findViewById(R.id.txtEditCarItemValue);
                     carListItemHolder.itemHeader.setText(carValues.carItemsHasMap.keySet().toArray()[position].toString());
                     carListItemHolder.itemValue.setText(carValues.carItemsHasMap.values().toArray()[position].toString());
                     carListItemHolder.itemValue.setOnClickListener(new View.OnClickListener() {
@@ -136,7 +136,7 @@ public class SettingsActivity extends AppCompatActivity {
         //Contains the components that'll be in each ListView item
         public class CarListItemHolder {
             TextView itemHeader;
-            TextView itemValue;
+            EditText itemValue;
         }
     }
 }
