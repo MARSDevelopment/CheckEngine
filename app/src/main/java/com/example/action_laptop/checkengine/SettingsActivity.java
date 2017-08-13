@@ -94,7 +94,7 @@ public class SettingsActivity extends AppCompatActivity {
         @NonNull
         @Override
         public View getView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
-            CarListItemHolder mainCarListItemHolder = null;
+            CarListItemHolder mainCarListItemHolder;
             CarXMLHandler carXMLHandler = new CarXMLHandler();
             XmlResourceParser xmlResourceParser = getResources().getXml(R.xml.custom);
             CarValues carValues = carXMLHandler.ParseCarXMLHanlder(xmlResourceParser);
@@ -107,8 +107,8 @@ public class SettingsActivity extends AppCompatActivity {
 
                     final CarListItemHolder carListItemHolder = new CarListItemHolder();
                     carListItemHolder.itemHeader = (TextView)convertView.findViewById(R.id.txtCarItemHeader);
-                    carListItemHolder.itemHeader.setText(carValues.carItemsHasMap.keySet().toArray()[position].toString());
                     carListItemHolder.itemValue = (TextView)convertView.findViewById(R.id.txtCarItemValue);
+                    carListItemHolder.itemHeader.setText(carValues.carItemsHasMap.keySet().toArray()[position].toString());
                     carListItemHolder.itemValue.setText(carValues.carItemsHasMap.values().toArray()[position].toString());
                     carListItemHolder.itemValue.setOnClickListener(new View.OnClickListener() {
                         @Override
@@ -116,7 +116,6 @@ public class SettingsActivity extends AppCompatActivity {
                         //Defines behavior of car value inputs cursor behavior
                         {
                             carListItemHolder.itemValue.setCursorVisible(true);
-
                             carListItemHolder.itemValue.setFocusableInTouchMode(true);
                             carListItemHolder.itemValue.setInputType(InputType.TYPE_CLASS_NUMBER);
                             carListItemHolder.itemValue.requestFocus();
@@ -125,10 +124,11 @@ public class SettingsActivity extends AppCompatActivity {
 
                 convertView.setTag(carListItemHolder);
             } else {
+                //keeps the position of the ListView
                 mainCarListItemHolder = (CarListItemHolder) convertView.getTag();
-                mainCarListItemHolder.itemHeader.setText(getItem(position));
+                mainCarListItemHolder.itemHeader.setText(carValues.carItemsHasMap.keySet().toArray()[position].toString());
+                mainCarListItemHolder.itemValue.setText(carValues.carItemsHasMap.values().toArray()[position].toString());
             }
-
 
             return convertView;
         }
