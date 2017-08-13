@@ -84,22 +84,6 @@ public class SettingsActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
-    public String  GetCarHeaderByPosition( int position){
-
-        CarXMLHandler carXMLHandler = new CarXMLHandler();
-        XmlResourceParser xmlResourceParser = getResources().getXml(R.xml.custom);
-        CarValues carValues = carXMLHandler.ParseCarXMLHanlder(xmlResourceParser);
-        return carValues.carItemsHasMap.keySet().toArray()[position].toString();
-    }
-
-    public String  GetCarValueByPosition( int position){
-
-        CarXMLHandler carXMLHandler = new CarXMLHandler();
-        XmlResourceParser xmlResourceParser = getResources().getXml(R.xml.custom);
-        CarValues carValues = carXMLHandler.ParseCarXMLHanlder(xmlResourceParser);
-        return carValues.carItemsHasMap.values().toArray()[position].toString();
-    }
-
     private class CarListAdapter extends ArrayAdapter<String> {
         private int carItemLayout;
 
@@ -155,5 +139,21 @@ public class SettingsActivity extends AppCompatActivity {
             TextView itemHeader;
             EditText itemValue;
         }
+    }
+
+    //TODO Refactor into CarXMLHandler
+    public  String GetCarHeaderByPosition(int position){
+        CarXMLHandler carXMLHandler = new CarXMLHandler();
+        XmlResourceParser xmlResourceParser = getResources().getXml(R.xml.custom);
+        CarValues carValues = carXMLHandler.ParseCarXMLHanlder(xmlResourceParser);
+        return carValues.carItemsHasMap.keySet().toArray()[position].toString();
+    }
+
+    //TODO Refactor into CarXMLHandler
+    public  String GetCarValueByPosition(int position){
+        CarXMLHandler carXMLHandler = new CarXMLHandler();
+        XmlResourceParser xmlResourceParser = getResources().getXml(R.xml.custom);
+        CarValues carValues = carXMLHandler.ParseCarXMLHanlder(xmlResourceParser);
+        return carValues.carItemsHasMap.values().toArray()[position].toString();
     }
 }
