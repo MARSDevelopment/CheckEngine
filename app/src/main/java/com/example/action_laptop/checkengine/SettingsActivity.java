@@ -134,7 +134,7 @@ public class SettingsActivity extends AppCompatActivity {
         }
 
         //Contains the components that'll be in each lis
-        //hi this is alex
+        //hi this is alex veldman
         public class CarListItemHolder {
             TextView itemHeader;
             TextView itemValue;
