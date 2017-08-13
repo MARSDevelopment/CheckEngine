@@ -8,6 +8,8 @@ Known Bugs:
 2a.) When hitting done, hide keypad & save values
 3.) Need to group displayed variables into drop down menus or similar grouping/categories
 3a.) Groupings TBD
+4.) On click in settings page for itemvalue, the issue is when clicking it pulls up a regular edit table, instead of a numeric edit table
+
 
 
 Future Growth:
