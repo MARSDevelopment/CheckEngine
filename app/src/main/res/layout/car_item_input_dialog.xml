@@ -20,7 +20,6 @@
         android:gravity="center"
         android:maxLength="7"
         android:paddingBottom="5sp"
-        android:selectAllOnFocus="true"
         android:textColor="#000"
         android:textSize="14sp" />
 </LinearLayout>
