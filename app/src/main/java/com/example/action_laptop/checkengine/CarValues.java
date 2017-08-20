@@ -27,7 +27,7 @@ public class CarValues{
         BRAKE_FLUID("Brake Fluid"),
         AUTOMATIC_TRANSMISSION_FLUID("Automatic Transmission Fluid"),
         MANUAL_TRANSMISSION_FLUID("Manual Transmission Fluid"),
-        RADIATOR_FLUID("Radiotor Fluid"),
+        RADIATOR_FLUID("Radiator Fluid"),
         POWER_STEERING_FLUID("Power Steering Fluid"),
         COOLANT("Coolant");
 

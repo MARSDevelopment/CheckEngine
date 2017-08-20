@@ -32,7 +32,7 @@ public class MainActivity extends AppCompatActivity {
 
                     try{
                         XmlResourceParser xmlResourceParser = getResources().getXml(R.xml.custom);
-                        CarValues carValues = carXMLHandler.ParseCarXMLHanlder(xmlResourceParser);
+                        CarValues carValues = carXMLHandler.ParseCarXMLHandler(xmlResourceParser);
 
                         if(carValues != null){
                             txtCreate.setText("Your file was read.");

@@ -156,7 +156,7 @@ public class CarXMLHandler extends XMLHandler {
                     }
 
                     if(element.getAttribute("attr").equals("fluids")){
-                        // System.out.println("Populating fuilds");
+                        // System.out.println("Populating fluids");
                         // carValues.setAutoTransmission(Integer.parseInt(element.getElementsByTagName("transmission").item(0).getTextContent()));
                         carValues.setAutoTransmission(Integer.parseInt(element.getElementsByTagName("automatic").item(0).getTextContent()));
                         carValues.setManualTransmission(Integer.parseInt(element.getElementsByTagName("manual").item(0).getTextContent()));
@@ -173,7 +173,7 @@ public class CarXMLHandler extends XMLHandler {
         return null;
     }
 
-    public CarValues ParseCarXMLHanlder(XmlResourceParser xmlResourceParser) {
+    public CarValues ParseCarXMLHandler(XmlResourceParser xmlResourceParser) {
         if (xmlResourceParser != null) {
             CarValues carValues = new CarValues();
             String value = null;
