@@ -1,17 +1,23 @@
-    <resources>
+<resources>
         //App Name
         <string name="app_name">Check Engine</string>
+        <string name="app_name_settings">Settings</string>
+        <string name="app_name_notifications">Notifications</string>
 
         //Global
         <string name="global_placeholder">PlaceHolder</string>
         <string name="global_cancel">Cancel</string>
         <string name="global_save">Save</string>
 
-
         //Dropdown Menu Strings
         <string name="action_home">Home</string>
         <string name="action_settings">Settings</string>
         <string name="action_notifications">Notifications</string>
+
+        //Home
+        <string name="home_current_mileage">Current Mileage</string>
+        <string name="home_tap_to_update">Tap To Update</string>
+        <string name="home_upcoming_repairs"><u>Upcoming Repairs</u></string>
 
         //Car Categories Strings
         <string name="engine">Engine</string>
@@ -42,4 +48,14 @@
         //car_list_item.xml
         <string name="settings_mi">mi</string>
 
-    </resources>
+        //Notifications
+        <string name="notification_title"><u>Notifications</u></string>
+        <string name="notification_threshold">Repair Notification Threshold</string>
+        <string name="notification_threshold_hint">When Notifications Will Begin To Appear</string>
+        <string name="notification_locations">Where would you like to see notifications?</string>
+        <string name="notification_bar">Android Notification Bar</string>
+        <string name="notification_lock_screen">Lock Screen Notifications</string>
+
+
+
+</resources>

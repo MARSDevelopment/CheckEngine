@@ -12,6 +12,7 @@ import android.support.annotation.Nullable;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.text.Editable;
 import android.text.InputType;
 import android.text.method.DigitsKeyListener;
 import android.view.LayoutInflater;
@@ -82,8 +83,8 @@ public class SettingsActivity extends AppCompatActivity {
                 break;
             case R.id.action_notifications:
                 // TODO Handle Notification Menu Item
-//                intent = new Intent(this, SettingsActivity.class);
-//                startActivity(intent);
+                intent = new Intent(this, NotificationsActivity.class);
+                startActivity(intent);
                 break;
             default:
                 intent = new Intent(this, MainActivity.class);
@@ -106,40 +107,42 @@ public class SettingsActivity extends AppCompatActivity {
         @Override
         public View getView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
             CarListItemHolder mainCarListItemHolder;
+            final String carItemHeader = GetCarHeaderByPosition(position);
+            final String carItemValue = GetCarValueByPosition(position);
 
             //populate ListView with instances of car_list_item.xml
             if(convertView == null){
                 //initialize view components
                 LayoutInflater inflater = LayoutInflater.from(getContext());
                 convertView = inflater.inflate(carItemLayout, parent, false);
-                final CarListItemHolder carListItemHolder = new CarListItemHolder();
+                CarListItemHolder carListItemHolder = new CarListItemHolder();
                 carListItemHolder.itemContainer = (TableRow)convertView.findViewById(R.id.tblRowCarItemContainer);
                 carListItemHolder.itemHeader = (TextView)convertView.findViewById(R.id.txtCarItemHeader);
                 carListItemHolder.itemValue = (TextView)convertView.findViewById(R.id.txtViewCarItemValue);
 
                 //set component properties
-                carListItemHolder.itemHeader.setText(GetCarHeaderByPosition(position));
-                carListItemHolder.itemValue.setText(GetCarValueByPosition(position));
+                carListItemHolder.itemHeader.setText(carItemHeader);
+                carListItemHolder.itemValue.setText(carItemValue);
                 carListItemHolder.itemContainer.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v){
                         //initialize dialog box components
                         v = LayoutInflater.from(SettingsActivity.this).inflate(R.layout.car_item_input_dialog, null);
                         AlertDialog.Builder builder = new AlertDialog.Builder(SettingsActivity.this);
-                        CarInputDialog carInputDialog = new CarInputDialog();
+                        final CarInputDialog carInputDialog = new CarInputDialog();
                         carInputDialog.carInputHeader = (TextView) v.findViewById(R.id.txtViewCarDialogItemHeader);
                         carInputDialog.carInputValue = (EditText) v.findViewById(R.id.txtEditCarDialogItemValue);
 
                         //set dialog box components' properties and behaviors
-                        carInputDialog.carInputHeader.setText(carListItemHolder.itemHeader.getText());
-                        carInputDialog.carInputValue.setText(carListItemHolder.itemValue.getText());
+                        carInputDialog.carInputHeader.setText(carItemHeader);
+                        carInputDialog.carInputValue.setText(carItemValue);
                         builder.setMessage("Edit Mileage Value")
                                 .setView(v)
                                 .setPositiveButton(R.string.global_save ,new DialogInterface.OnClickListener(){
                                     @Override
                                     public void onClick(DialogInterface dialogInterface, int which){
                                         //set behavior for when Save is clicked
-                                        UpdateCarXMLFile();
+                                        UpdateCarXMLFile(carItemHeader, carInputDialog.carInputValue.getText());
 
                                     }
                                 })
@@ -174,8 +177,8 @@ public class SettingsActivity extends AppCompatActivity {
             } else {
                 //keeps the position of the ListView items
                 mainCarListItemHolder = (CarListItemHolder) convertView.getTag();
-                mainCarListItemHolder.itemHeader.setText(GetCarHeaderByPosition(position));
-                mainCarListItemHolder.itemValue.setText(GetCarValueByPosition(position));
+                mainCarListItemHolder.itemHeader.setText(carItemHeader);
+                mainCarListItemHolder.itemValue.setText(carItemValue);
             }
 
             return convertView;
@@ -195,9 +198,15 @@ public class SettingsActivity extends AppCompatActivity {
         }
     }
 
-    public Boolean UpdateCarXMLFile(){
-        return true;
+    //TODO Refactor to grab the xml file based on selected configuration
+    private void UpdateCarXMLFile(String header, Editable value) {
+        if(Validator.ValidateNumericInput(value.toString())){
+            XmlResourceParser xmlResourceParser = getResources().getXml(R.xml.custom);
+            new CarXMLHandler().UpdateCarXMLFile(xmlResourceParser, header, Integer.parseInt(value.toString()));
+        }
     }
+
+
 
     //TODO Refactor into CarXMLHandler
     public String GetCarHeaderByPosition(int position){

@@ -17,6 +17,15 @@ import javax.xml.parsers.DocumentBuilderFactory;
 
 public class CarXMLHandler extends XMLHandler {
 
+    public boolean UpdateCarXMLFile(XmlResourceParser xmlResourceParser, String header, int value){
+        try {
+            xmlResourceParser.setProperty(header, value);
+        } catch (Exception ex){
+            //TODO handle exception
+        }
+        return true;
+    }
+
     public boolean WriteCarXMLFile(CarValues carValues, String path){
         try {
             //builds XML file

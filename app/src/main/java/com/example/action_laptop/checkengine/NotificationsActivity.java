@@ -1,28 +1,23 @@
 package com.example.action_laptop.checkengine;
 
 import android.content.Intent;
-import android.content.res.XmlResourceParser;
 import android.os.Bundle;
+import android.support.design.widget.FloatingActionButton;
+import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.widget.Button;
-import android.widget.TextView;
+import android.view.View;
 
-public class MainActivity extends AppCompatActivity {
+public class NotificationsActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
-
-        //variables
+        setContentView(R.layout.activity_notifications);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-
         setSupportActionBar(toolbar);
-
 
     }
 
@@ -40,6 +35,11 @@ public class MainActivity extends AppCompatActivity {
         // as you specify a parent activity in AndroidManifest.xml.
         Intent intent;
 
+//        public static final String EXTRA_MESSAGE = "com.example.myfirstapp.MESSAGE";
+//        EditText editText = (EditText) findViewById(R.id.editText);
+//        String message = editText.getText().toString();
+//        intent.putExtra(EXTRA_MESSAGE, message);
+
         switch (item.getItemId()){
             case R.id.action_settings:
                 intent = new Intent(this, SettingsActivity.class);
@@ -51,7 +51,6 @@ public class MainActivity extends AppCompatActivity {
                 startActivity(intent);
                 break;
             default:
-                //defaults to home page
                 intent = new Intent(this, MainActivity.class);
                 startActivity(intent);
                 break;
@@ -59,4 +58,5 @@ public class MainActivity extends AppCompatActivity {
 
         return super.onOptionsItemSelected(item);
     }
+
 }
