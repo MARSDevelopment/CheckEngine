@@ -1,17 +1,18 @@
 package com.example.action_laptop.checkengine;
 
 import android.content.Intent;
-import android.content.res.XmlResourceParser;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.widget.Button;
-import android.widget.TextView;
+import android.widget.ListView;
+
+import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity {
+
+    private ArrayList<String> carRepiarItemList = new ArrayList<String>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -22,8 +23,15 @@ public class MainActivity extends AppCompatActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
 
         setSupportActionBar(toolbar);
+        generateSettingItems();
+        ListView listView = (ListView)findViewById(R.id.listViewUpcomingRepairs);
+        listView.setAdapter(new CarItemArrayAdapter(this, R.layout.car_list_item, carRepiarItemList));
+    }
 
-
+    private void generateSettingItems(){
+        for(Enum item : CarValues.CarItems.values()){
+            carRepiarItemList.add(item.toString());
+        }
     }
 
     @Override

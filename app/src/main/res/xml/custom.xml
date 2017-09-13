@@ -1,31 +1,31 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <car>
     <carSection attr="engine">
-        <timingBelts>0</timingBelts>
-        <solenoid>0</solenoid>
-        <alternator>25</alternator>
-        <starter>0</starter>
-        <airFilter>23452</airFilter>
+        <timingBelts>24000</timingBelts>
+        <solenoid>60000</solenoid>
+        <alternator>60000</alternator>
+        <starter>60000</starter>
+        <airFilter>30000</airFilter>
     </carSection>
     <carSection attr="wheels">
         <brakePads>
-            <disc>456</disc>
-            <drum>4567</drum>
+            <disc>40000</disc>
+            <drum>40000</drum>
         </brakePads>
-        <rotors>0</rotors>
-        <tires>0</tires>
-        <rotate>0</rotate>
-        <alignment>0</alignment>
+        <rotors>30000</rotors>
+        <tires>50000</tires>
+        <rotate>10000</rotate>
+        <alignment>45000</alignment>
     </carSection>
     <carSection attr="fluids">
-        <oil>0</oil>
-        <brake>0</brake>
+        <oil>4500</oil>
+        <brake>80000</brake>
         <transmission>
-            <automatic>4000</automatic>
-            <manual>200</manual>
+            <automatic>80000</automatic>
+            <manual>40000</manual>
         </transmission>
-        <radiator>0</radiator>
-        <powerSteering>0</powerSteering>
-        <coolant>0</coolant>
+        <radiator>60000</radiator>
+        <powerSteering>60000</powerSteering>
+        <coolant>60000</coolant>
     </carSection>
 </car>
