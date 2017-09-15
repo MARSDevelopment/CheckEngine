@@ -1,61 +1,70 @@
 <resources>
-        //App Name
-        <string name="app_name">Check Engine</string>
-        <string name="app_name_settings">Settings</string>
-        <string name="app_name_notifications">Notifications</string>
+    //App Name
+    <string name="app_name">Check Engine</string>
+    <string name="app_name_repair_schedule">Repair Schedule</string>
+    <string name="app_name_last_repaired">Last Repaired</string>
+    <string name="app_name_notifications">Notifications</string>
 
-        //Global
-        <string name="global_placeholder">PlaceHolder</string>
-        <string name="global_cancel">Cancel</string>
-        <string name="global_save">Save</string>
+    //Global
+    <string name="global_placeholder">PlaceHolder</string>
+    <string name="global_cancel">Cancel</string>
+    <string name="global_save">Save</string>
+    <string name="global_tap_to_update">Tap To Update</string>
 
-        //Dropdown Menu Strings
-        <string name="action_home">Home</string>
-        <string name="action_settings">Settings</string>
-        <string name="action_notifications">Notifications</string>
 
-        //Home
-        <string name="home_current_mileage">Current Mileage</string>
-        <string name="home_tap_to_update">Tap To Update</string>
-        <string name="home_upcoming_repairs"><u>Upcoming Repairs</u></string>
+    //Dropdown Menu Strings
+    <string name="action_home">Home</string>
+    <string name="action_repair_schedule">Repair Schedule</string>
+    <string name="action_last_repaired">Last Repaired</string>
+    <string name="action_notifications">Notifications</string>
 
-        //Car Categories Strings
-        <string name="engine">Engine</string>
-        <string name="wheels">Wheels</string>
-        <string name="fluids">Fluids</string>
+    //Car Categories Strings
+    <string name="engine">Engine</string>
+    <string name="wheels">Wheels</string>
+    <string name="fluids">Fluids</string>
 
-        //Car Item Strings
-        <string name="timing_belts">Timing Belts</string>
-        <string name="solenoid">Solenoid</string>
-        <string name="alternator">Alternator</string>
-        <string name="starter">Starter</string>
-        <string name="air_filter">Air Filter</string>
-        <string name="disc_brakes">Disc Brakes</string>
-        <string name="drum_brakes">Drum Brakes</string>
-        <string name="rotors">Rotors</string>
-        <string name="tires">Tires</string>
-        <string name="rotate">Rotate</string>
-        <string name="alignment">Alignment</string>
-        <string name="oil">Enging Oil</string>
-        <string name="brake">Brake Fluid</string>
-        <string name="auto_transmission">Automatic Transmission Fluid</string>
-        <string name="manual_transmission">Manual Transmission Fluid</string>
-        <string name="radiator">Radiator Fluid</string>
-        <string name="power_steering">Power Steering Fluid</string>
-        <string name="coolant">Coolant</string>
-        <string name="title_activity_settings">Settings</string>
+    //Car Item Strings
+    <string name="timing_belts">Timing Belts</string>
+    <string name="solenoid">Solenoid</string>
+    <string name="alternator">Alternator</string>
+    <string name="starter">Starter</string>
+    <string name="air_filter">Air Filter</string>
+    <string name="disc_brakes">Disc Brakes</string>
+    <string name="drum_brakes">Drum Brakes</string>
+    <string name="rotors">Rotors</string>
+    <string name="tires">Tires</string>
+    <string name="rotate">Rotate</string>
+    <string name="alignment">Alignment</string>
+    <string name="oil">Enging Oil</string>
+    <string name="brake">Brake Fluid</string>
+    <string name="auto_transmission">Automatic Transmission Fluid</string>
+    <string name="manual_transmission">Manual Transmission Fluid</string>
+    <string name="radiator">Radiator Fluid</string>
+    <string name="power_steering">Power Steering Fluid</string>
+    <string name="coolant">Coolant</string>
+    <string name="title_activity_settings">Settings</string>
 
-        //car_list_item.xml
-        <string name="settings_mi">mi</string>
+    //Home Activity
+    <string name="home_current_mileage">Current Mileage</string>
+    <string name="home_upcoming_repairs"><u>Upcoming Repairs</u></string>
 
-        //Notifications
-        <string name="notification_title"><u>Notifications</u></string>
-        <string name="notification_threshold">Repair Notification Threshold</string>
-        <string name="notification_threshold_hint">When Notifications Will Begin To Appear</string>
-        <string name="notification_locations">Where would you like to see notifications?</string>
-        <string name="notification_bar">Android Notification Bar</string>
-        <string name="notification_lock_screen">Lock Screen Notifications</string>
+    //Repair Schedule Activity
+    <string name="repair_schedule_hint">How Often Should These Be Repaired?</string>
 
+    //Last Repaired Activity
+    <string name="last_repaired_hint">When Was The Last Time These Were Repaired?</string>
+
+    //car_list_item.xml
+    <string name="settings_mi">mi</string>
+
+    //Notifications
+    <string name="notification_title"><u>Notifications</u></string>
+    <string name="notification_threshold">Repair Notification Threshold</string>
+    <string name="notification_threshold_hint">When Notifications Will Begin To Appear</string>
+    <string name="notification_locations">Where would you like to see notifications?</string>
+    <string name="notification_bar">Android Notification Bar</string>
+    <string name="notification_lock_screen">Lock Screen Notifications</string>
+    <string name="title_activity_last_repaired">Last Repaired</string>
 
 
 </resources>

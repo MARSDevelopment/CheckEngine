@@ -4,14 +4,18 @@
     tools:context="com.example.action_laptop.checkengine.MainActivity" >
     <item android:id="@+id/action_home"
         android:title="@string/action_home"
-        android:orderInCategory="100"
+        android:orderInCategory="103"
         app:showAsAction="never" />
-    <item android:id="@+id/action_settings"
-        android:title="@string/action_settings"
-        android:orderInCategory="100"
+    <item android:id="@+id/action_repair_schedule"
+        android:title="@string/action_repair_schedule"
+        android:orderInCategory="103"
         app:showAsAction="never" />
-    <item android:id="@+id/action_notifications"
-        android:title="@string/action_notifications"
-        android:orderInCategory="100"
-        app:showAsAction="never" />
+    <item
+        android:id="@+id/action_last_repaired"
+        android:orderInCategory="105"
+        android:title="@string/action_last_repaired" />
+    <item
+        android:id="@+id/action_notifications"
+        android:orderInCategory="106"
+        android:title="@string/action_notifications" />
 </menu>

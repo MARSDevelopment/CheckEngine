@@ -18,6 +18,8 @@ import android.widget.TextView;
 
 import java.util.List;
 
+import static com.example.action_laptop.checkengine.ComponentContainers.*;
+
 /**
  * Created by Action-Laptop on 9/13/2017.
  */
@@ -52,34 +54,34 @@ class CarItemArrayAdapter extends ArrayAdapter<String> {
             //set component properties
             carListItemHolder.itemHeader.setText(carItemHeader);
             carListItemHolder.itemValue.setText(carItemValue);
-            carListItemHolder.itemContainer.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    //initialize dialog box components
-                    v = LayoutInflater.from(context).inflate(R.layout.car_item_input_dialog, null);
-                    AlertDialog.Builder builder = new AlertDialog.Builder(context);
-                    final CarInputDialog carInputDialog = new CarInputDialog();
-                    carInputDialog.carInputHeader = (TextView) v.findViewById(R.id.txtViewCarDialogItemHeader);
-                    carInputDialog.carInputValue = (EditText) v.findViewById(R.id.txtEditCarDialogItemValue);
+            if(context instanceof RepairScheduleActivity) {
+                carListItemHolder.itemContainer.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        //initialize dialog box components
+                        v = LayoutInflater.from(context).inflate(R.layout.car_item_input_dialog, null);
+                        AlertDialog.Builder builder = new AlertDialog.Builder(context);
+                        final CarInputDialog carInputDialog = new CarInputDialog();
+                        carInputDialog.carInputHeader = (TextView) v.findViewById(R.id.txtViewCarDialogItemHeader);
+                        carInputDialog.carInputValue = (EditText) v.findViewById(R.id.txtEditCarDialogItemValue);
 
-                    //set dialog box components' properties and behaviors
-                    carInputDialog.carInputHeader.setText(carItemHeader);
-                    carInputDialog.carInputValue.setText(carItemValue);
-                    builder.setMessage("Edit Mileage Value")
-                            .setView(v)
-                            .setPositiveButton(R.string.global_save, new DialogInterface.OnClickListener() {
-                                @Override
-                                public void onClick(DialogInterface dialogInterface, int which) {
-                                    //set behavior for when Save is clicked
-                                    UpdateCarXMLFile(carItemHeader, carInputDialog.carInputValue.getText());
+                        //set dialog box components' properties and behaviors
+                        carInputDialog.carInputHeader.setText(carItemHeader);
+                        carInputDialog.carInputValue.setText(carItemValue);
+                        builder.setView(v)
+                                .setPositiveButton(R.string.global_save, new DialogInterface.OnClickListener() {
+                                    @Override
+                                    public void onClick(DialogInterface dialogInterface, int which) {
+                                        //TODO add value update behavior
 
-                                }
-                            })
-                            .setNegativeButton(R.string.global_cancel, null);
-                    AlertDialog carInputAlertDialog = builder.create();
-                    carInputAlertDialog.show();
-                }
-            });
+                                    }
+                                })
+                                .setNegativeButton(R.string.global_cancel, null);
+                        AlertDialog carInputAlertDialog = builder.create();
+                        carInputAlertDialog.show();
+                    }
+                });
+            }
 
             convertView.setTag(carListItemHolder);
         } else {
@@ -90,19 +92,6 @@ class CarItemArrayAdapter extends ArrayAdapter<String> {
         }
 
         return convertView;
-    }
-
-    //Contains the components that'll be in each ListView item
-    private class CarListItemHolder {
-        TableRow itemContainer;
-        TextView itemHeader;
-        TextView itemValue;
-        TextView itemExtension;
-    }
-
-    private class CarInputDialog {
-        TextView carInputHeader;
-        EditText carInputValue;
     }
 
     //TODO Refactor to grab the xml file based on selected configuration
@@ -130,14 +119,16 @@ class CarItemArrayAdapter extends ArrayAdapter<String> {
     }
 
     private int GetCarXMLList(){
-            if (context instanceof MainActivity) {
-                return R.xml.last_repiar;
-            } else if (context instanceof SettingsActivity) {
-                return R.xml.custom;
-            } else{
-                //TODO replace with blank list or throw exception
-                return R.xml.custom;
-               //throw new Exception();
-            }
+        if (context instanceof MainActivity) {
+            return R.xml.last_repiar;
+        } else if (context instanceof RepairScheduleActivity) {
+            return R.xml.custom;
+        } else if (context instanceof LastRepairedActivity) {
+            return R.xml.last_repiar;
+        } else{
+            //TODO replace with blank list or throw exception
+            return R.xml.custom;
+           //throw new Exception();
+        }
     }
 }

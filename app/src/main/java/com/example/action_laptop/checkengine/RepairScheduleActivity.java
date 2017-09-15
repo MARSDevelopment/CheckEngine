@@ -6,16 +6,31 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.ListView;
 
-public class NotificationsActivity extends AppCompatActivity {
+import java.util.ArrayList;
+
+public class RepairScheduleActivity extends AppCompatActivity {
+
+    private ArrayList<String> carItemHeaderList = new ArrayList<String>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_notifications);
+        setContentView(R.layout.activity_repair_schedule);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
+        generateSettingItems();
+        ListView listView = (ListView)findViewById(R.id.listViewCarSettings);
+        listView.setAdapter(new CarItemArrayAdapter(this, R.layout.car_list_item, carItemHeaderList));
+
+    }
+
+    private void generateSettingItems(){
+        for(Enum item : CarValues.CarItems.values()){
+            carItemHeaderList.add(item.toString());
+        }
     }
 
     @Override
@@ -31,8 +46,12 @@ public class NotificationsActivity extends AppCompatActivity {
         // automatically handle clicks on the Home/Up button, so long
         // as you specify a parent activity in AndroidManifest.xml.
 
+//        public static final String EXTRA_MESSAGE = "com.example.myfirstapp.MESSAGE";
+//        EditText editText = (EditText) findViewById(R.id.editText);
+//        String message = editText.getText().toString();
+//        intent.putExtra(EXTRA_MESSAGE, message);
+
         MainMenu.ActivitySwitchboard(this, item, new Intent());
         return super.onOptionsItemSelected(item);
     }
-
 }

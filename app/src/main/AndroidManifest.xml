@@ -20,8 +20,8 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".SettingsActivity"
-            android:label="@string/app_name_settings"
+            android:name=".RepairScheduleActivity"
+            android:label="@string/app_name_repair_schedule"
             android:theme="@style/AppTheme.NoActionBar">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -32,6 +32,10 @@
         <activity
             android:name=".NotificationsActivity"
             android:label="@string/app_name_notifications"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".LastRepairedActivity"
+            android:label="@string/title_activity_last_repaired"
             android:theme="@style/AppTheme.NoActionBar"></activity>
     </application>
 
