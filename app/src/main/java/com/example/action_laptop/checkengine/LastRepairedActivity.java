@@ -2,20 +2,13 @@ package com.example.action_laptop.checkengine;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
 import android.widget.ListView;
 
-import java.util.ArrayList;
-
 public class LastRepairedActivity extends AppCompatActivity {
-
-    ArrayList<String> carItemHeaderList = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -24,17 +17,12 @@ public class LastRepairedActivity extends AppCompatActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        generateSettingItems();
-
         ListView listView = (ListView) findViewById(R.id.listViewLastRepairedList);
-        listView.setAdapter(new CarItemArrayAdapter(this, R.layout.car_list_item, carItemHeaderList));
+        listView.setAdapter(new CarItemArrayAdapter(this, R.layout.car_list_item, CarValues.GetCarItemList(), LastRepairedTable.TABLE_NAME,
+                                                        LastRepairedTable.TableColumns.RELATED_REPAIR_SCHEDULE_NAME_COLUMN.toString(), "Default"));
     }
 
-    private void generateSettingItems(){
-        for(Enum item : CarValues.CarItems.values()){
-            carItemHeaderList.add(item.toString());
-        }
-    }
+    //region App Menu Overrides
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -57,4 +45,6 @@ public class LastRepairedActivity extends AppCompatActivity {
         MainMenu.ActivitySwitchboard(this, item, new Intent());
         return super.onOptionsItemSelected(item);
     }
+
+    //endregion
 }

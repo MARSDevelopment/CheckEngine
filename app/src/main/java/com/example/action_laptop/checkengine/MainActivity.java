@@ -16,28 +16,18 @@ import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 
-import java.util.ArrayList;
-
-import com.example.action_laptop.checkengine.MainMenu.*;
-
 public class MainActivity extends AppCompatActivity {
-
-    private ArrayList<String> carRepairItemList = new ArrayList<String>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
-        //variables
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-
         setSupportActionBar(toolbar);
-        generateSettingItems();
 
         //populates upcoming repairs
         ListView listView = (ListView)findViewById(R.id.listViewUpcomingRepairs);
-        listView.setAdapter(new CarItemArrayAdapter(this, R.layout.car_list_item, carRepairItemList));
+        listView.setAdapter(new CarItemArrayAdapter(this, R.layout.car_list_item, CarValues.GetCarItemList(), RepairScheduleTable.TABLE_NAME, RepairScheduleTable.TableColumns.NAME_COLUMN.toString(), "Default"));
 
         //dialog pop up for updating current mileage
         LinearLayout linearLayoutCurrentMileageContainer = (LinearLayout) findViewById(R.id.linearLayoutCurrentMilageContainer);
@@ -54,8 +44,7 @@ public class MainActivity extends AppCompatActivity {
                 carInputDialog.carInputHeader.setText(Html.fromHtml("<u>"+getResources().getString(R.string.home_current_mileage)+"</u>"));
                 carInputDialog.carInputValue.setText("50000");
                 AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
-                builder
-                        .setView(v)
+                builder.setView(v)
                         .setPositiveButton(R.string.global_save, new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialogInterface, int which) {
@@ -67,14 +56,9 @@ public class MainActivity extends AppCompatActivity {
                 carInputAlertDialog.show();
             }
         });
-
     }
 
-    private void generateSettingItems(){
-        for(Enum item : CarValues.CarItems.values()){
-            carRepairItemList.add(item.toString());
-        }
-    }
+    //region App Dropdown Overrides
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -92,4 +76,6 @@ public class MainActivity extends AppCompatActivity {
         MainMenu.ActivitySwitchboard(this, item, new Intent());
         return super.onOptionsItemSelected(item);
     }
+
+    //endregion  Overrides
 }

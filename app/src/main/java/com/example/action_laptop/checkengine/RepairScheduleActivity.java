@@ -8,11 +8,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.ListView;
 
-import java.util.ArrayList;
-
 public class RepairScheduleActivity extends AppCompatActivity {
-
-    private ArrayList<String> carItemHeaderList = new ArrayList<String>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -21,17 +17,11 @@ public class RepairScheduleActivity extends AppCompatActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        generateSettingItems();
         ListView listView = (ListView)findViewById(R.id.listViewCarSettings);
-        listView.setAdapter(new CarItemArrayAdapter(this, R.layout.car_list_item, carItemHeaderList));
-
+        listView.setAdapter(new CarItemArrayAdapter(this, R.layout.car_list_item, CarValues.GetCarItemList(), RepairScheduleTable.TABLE_NAME, RepairScheduleTable.TableColumns.NAME_COLUMN.toString(), "Default"));
     }
 
-    private void generateSettingItems(){
-        for(Enum item : CarValues.CarItems.values()){
-            carItemHeaderList.add(item.toString());
-        }
-    }
+    //region App Menu Overrides
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -54,4 +44,6 @@ public class RepairScheduleActivity extends AppCompatActivity {
         MainMenu.ActivitySwitchboard(this, item, new Intent());
         return super.onOptionsItemSelected(item);
     }
+
+    //endregion
 }

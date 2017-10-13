@@ -25,14 +25,21 @@ import static com.example.action_laptop.checkengine.ComponentContainers.*;
  */
 
 class CarItemArrayAdapter extends ArrayAdapter<String> {
+
+    //region Variables
     private int carItemLayout;
     private Context context;
+    private CarValues carValues;
+    //endregion
 
-    CarItemArrayAdapter(@NonNull Context context, @LayoutRes int resource, @NonNull List<String> objects) {
+    //region Constructors
+    CarItemArrayAdapter(@NonNull Context context, @LayoutRes int resource, @NonNull List<String> objects, String tableName, String tableRowName, String tableRowNameValue) {
         super(context, resource, objects);
         carItemLayout = resource;
         this.context = context;
+        carValues = new CarValuesDBHandler(context, null).GetRowFrom(tableName, tableRowName, tableRowNameValue);
     }
+    //endregion
 
     @NonNull
     @Override
@@ -94,41 +101,15 @@ class CarItemArrayAdapter extends ArrayAdapter<String> {
         return convertView;
     }
 
-    //TODO Refactor to grab the xml file based on selected configuration
-    private void UpdateCarXMLFile(String header, Editable value) {
-        if (Validator.ValidateNumericInput(value.toString())) {
-            XmlResourceParser xmlResourceParser = context.getResources().getXml(R.xml.custom);
-            CarXMLHandler.UpdateCarXMLFile(xmlResourceParser, header, Integer.parseInt(value.toString()));
-        }
-    }
+    //region Internal(private) Methods
 
-    //TODO Refactor with below?
     private String GetCarHeaderByPosition(int position) {
-        CarXMLHandler carXMLHandler = new CarXMLHandler();
-        XmlResourceParser xmlResourceParser = context.getResources().getXml(GetCarXMLList());
-        CarValues carValues = carXMLHandler.ParseCarXMLHandler(xmlResourceParser);
         return carValues.carItemsHasMap.keySet().toArray()[position].toString();
     }
 
-    //TODO Refactor with above?
     private String GetCarValueByPosition(int position) {
-        CarXMLHandler carXMLHandler = new CarXMLHandler();
-        XmlResourceParser xmlResourceParser = context.getResources().getXml(GetCarXMLList());
-        CarValues carValues = carXMLHandler.ParseCarXMLHandler(xmlResourceParser);
         return carValues.carItemsHasMap.values().toArray()[position].toString();
     }
 
-    private int GetCarXMLList(){
-        if (context instanceof MainActivity) {
-            return R.xml.last_repiar;
-        } else if (context instanceof RepairScheduleActivity) {
-            return R.xml.custom;
-        } else if (context instanceof LastRepairedActivity) {
-            return R.xml.last_repiar;
-        } else{
-            //TODO replace with blank list or throw exception
-            return R.xml.custom;
-           //throw new Exception();
-        }
-    }
+    //endregion
 }

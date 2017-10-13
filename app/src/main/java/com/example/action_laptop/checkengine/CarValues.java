@@ -9,27 +9,28 @@ import java.util.*;
 
 public class CarValues{
 
-    //variables
-    public LinkedHashMap<Enum, Integer> carItemsHasMap = new LinkedHashMap<Enum, Integer>();
+    //region Variables
+    public Map<Enum, Integer> carItemsHasMap = new LinkedHashMap<>();
+
     public enum CarItems {
-        TIMING_BELTS("Timing Belts"),
-        SOLENOID("Solenoid"),
-        ALTERNATOR("Alternator"),
-        STARTER("Starter"),
-        AIR_FILTER("Air Filter"),
-        DISC_BRAKES("Disc Brakes"),
-        DRUM_BRAKES("Drum Brakes"),
-        ROTORS("Rotors"),
-        TIRES("Tires"),
-        ROTATION("Rotation"),
+        AIR_FILTER("AirFilter"),
         ALIGNMENT("Alignment"),
+        ALTERNATOR("Alternator"),
+        AUTOMATIC_TRANSMISSION_FLUID("AutomaticTransmissionFluid"),
+        BRAKE_FLUID("BrakeFluid"),
+        COOLANT("Coolant"),
+        DISC_BRAKES("DiscBrakes"),
+        DRUM_BRAKES("DrumBrakes"),
+        MANUAL_TRANSMISSION_FLUID("ManualTransmissionFluid"),
         OIL("Oil"),
-        BRAKE_FLUID("Brake Fluid"),
-        AUTOMATIC_TRANSMISSION_FLUID("Automatic Transmission Fluid"),
-        MANUAL_TRANSMISSION_FLUID("Manual Transmission Fluid"),
-        RADIATOR_FLUID("Radiator Fluid"),
-        POWER_STEERING_FLUID("Power Steering Fluid"),
-        COOLANT("Coolant");
+        POWER_STEERING_FLUID("PowerSteeringFluid"),
+        RADIATOR_FLUID("RadiatorFluid"),
+        ROTATION("Rotation"),
+        ROTORS("Rotors"),
+        SOLENOID("Solenoid"),
+        STARTER("Starter"),
+        TIMING_BELTS("TimingBelts"),
+        TIRES("Tires");
 
         private String value;
 
@@ -38,7 +39,7 @@ public class CarValues{
             return value;
         }
 
-        private CarItems(String value){
+        CarItems(String value){
             this.value = value;
         }
 
@@ -47,14 +48,11 @@ public class CarValues{
         public String toString() {
             return this.getValue();
         }
-
-        //returns enum from string
-        public static CarItems getEnum(String value) {
-            for(CarItems item : values())
-                if(item.getValue().equalsIgnoreCase(value)) return item;
-            throw new IllegalArgumentException();
-        }
     }
+
+    //endregion
+
+    //region Constructors
 
     //No Arg Constructor
     public CarValues(){
@@ -63,29 +61,66 @@ public class CarValues{
         }
     }
 
+    public CarValues(String str){
+        setAirFilter(25000);
+        setAlignment(25000);
+        setAlternator(25000);
+        setAutoTransmission(25000);
+        setBrakeFluid(25000);
+        setCoolant(25000);
+        setDiscBrakes(25000);
+        setDrumBrakes(25000);
+        setManualTransmission(25000);
+        setOil(25000);
+        setPowerSteering(25000);
+        setRadiator(25000);
+        setRotation(25000);
+        setRotors(25000);
+        setSolenoid(25000);
+        setStarter(25000);
+        setTimingBelts(25000);
+        setTires(25000);
+    }
+
     //Full Arg Contructor
-    public CarValues(int timingBelts, int solenoid, int alternator, int starter, int airFilter, int discBrakes, int drumBrakes, int rotors, int tires, int rotatation, int alignment, int oil, int brakeFluid, int autoTransmission, int manualTransmission, int radiator, int powerSteering, int coolant) {
+    public CarValues(int airFilter, int alignment, int alternator, int automaticTransFluid, int brakeFluid, int coolant, int discBrakes, int drumBrakes, int manualTransFluid,
+                     int oil, int powerSteering, int radiator, int rotation, int rotors, int solenoid, int starter, int timingBelts, int tires) {
         setAirFilter(airFilter);
         setAlignment(alignment);
         setAlternator(alternator);
-        setAutoTransmission(autoTransmission);
+        setAutoTransmission(automaticTransFluid);
         setBrakeFluid(brakeFluid);
         setCoolant(coolant);
         setDiscBrakes(discBrakes);
         setDrumBrakes(drumBrakes);
-        setManualTransmission(manualTransmission);
+        setManualTransmission(manualTransFluid);
         setOil(oil);
         setPowerSteering(powerSteering);
         setRadiator(radiator);
-        setRotation(rotatation);
+        setRotation(rotation);
         setRotors(rotors);
         setSolenoid(solenoid);
         setStarter(starter);
         setTimingBelts(timingBelts);
         setTires(tires);
     }
+    //endregion
 
-    //Getters and Setters
+    //region Methods
+
+    //creates and populates a string list from the car item enums
+    public static List<String> GetCarItemList(){
+        ArrayList<String> carItemList = new ArrayList<>();
+
+        for(Enum item : CarValues.CarItems.values()){
+            carItemList.add(item.toString());
+        }
+
+        return carItemList;
+    }
+    //endregion
+
+    //region Getters and Setters
     public int getAirFilter() {
         return carItemsHasMap.get(CarItems.AIR_FILTER);
     }
@@ -229,203 +264,6 @@ public class CarValues{
     public void setTires(int tires) {
         carItemsHasMap.put(CarItems.TIRES, tires);
     }
-
-//    public int getSolenoid() {
-//        return solenoid;
-//    }
-//
-//    public void setSolenoid(int solenoid) {
-//        this.solenoid = solenoid;
-//    }
-//
-//    public int getAlternator() {
-//        return alternator;
-//    }
-//
-//    public void setAlternator(int alternator) {
-//        this.alternator = alternator;
-//    }
-//
-//    public int getStarter() {
-//        return starter;
-//    }
-//
-//    public void setStarter(int starter) {
-//        this.starter = starter;
-//    }
-//
-//    public int getAirFilter() {
-//        return airFilter;
-//    }
-//
-//    public void setAirFilter(int airFilter) {
-//        this.airFilter = airFilter;
-//    }
-//
-//    public int getDiscBrakes() {
-//        return  discBrakes;
-//    }
-//
-//    public void setDiscBrakes(int dicsBrakes) {
-//        this. discBrakes = dicsBrakes;
-//    }
-//
-//    public int getDrumBrakes() {
-//        return drumBrakes;
-//    }
-//
-//    public void setDrumBrakes(int drumBrakes) {
-//        this.drumBrakes = drumBrakes;
-//    }
-//
-//    public int getRotors() {
-//        return rotors;
-//    }
-//
-//    public void setRotors(int rotors) {
-//        this.rotors = rotors;
-//    }
-//
-//    public int getTires() {
-//        return tires;
-//    }
-//
-//    public void setTires(int tires) {
-//        this.tires = tires;
-//    }
-//
-//    public int getRotation() {
-//        return rotation;
-//    }
-//
-//    public void setRotation(int rotate) {
-//        this.rotation = rotate;
-//    }
-//
-//    public int getAlignment() {
-//        return alignment;
-//    }
-//
-//    public void setAlignment(int alignment) {
-//        this.alignment = alignment;
-//    }
-//
-//    public int getOil() {
-//        return oil;
-//    }
-//
-//    public void setOil(int oil) {
-//        this.oil = oil;
-//    }
-//
-//    public int getBrake() {
-//        return brakeFluid;
-//    }
-//
-//    public void setBrake(int brakeFluid) {
-//        this.brakeFluid = brakeFluid;
-//    }
-//
-//    public int getAutoTransmission() {
-//        return autoTransmission;
-//    }
-//
-//    public void setAutoTransmission(int autoTransmission) {
-//        this.autoTransmission = autoTransmission;
-//    }
-//
-//    public int getManualTransmission() {
-//        return manualTransmission;
-//    }
-//
-//    public void setManualTransmission(int manualTransmission) {
-//        this.manualTransmission = manualTransmission;
-//    }
-//
-//    public int getRadiator() {
-//        return radiator;
-//    }
-//
-//    public void setRadiator(int radiator) {
-//        this.radiator = radiator;
-//    }
-//
-//    public int getPowerSteering() {
-//        return powerSteering;
-//    }
-//
-//    public void setPowerSteering(int powerSteering) {
-//        this.powerSteering = powerSteering;
-//    }
-//
-//    public int getCoolant() {
-//        return coolant;
-//    }
-//
-//    public void setCoolant(int coolant) {
-//        this.coolant = coolant;
-//    }
-    //
-//    for (CarItems item : CarItems.values()){
-//        switch (item){
-//            case AIR_FILTER:
-//                carItemsHasMap.put(item, airFilter);
-//                break;
-//            case ALIGNMENT:
-//                carItemsHasMap.put(item, alignment);
-//                break;
-//            case ALTERNATOR:
-//                carItemsHasMap.put(item, alternator);
-//                break;
-//            case AUTOMATIC_TRANSMISSION_FLUID:
-//                carItemsHasMap.put(item, autoTransmission);
-//                break;
-//            case BRAKE_FLUID:
-//                carItemsHasMap.put(item, brakeFluid);
-//                break;
-//            case COOLANT:
-//                carItemsHasMap.put(item, coolant);
-//                break;
-//            case DISC_BRAKES:
-//                carItemsHasMap.put(item, discBrakes);
-//                break;
-//            case DRUM_BRAKES:
-//                carItemsHasMap.put(item, drumBrakes);
-//                break;
-//            case MANUAL_TRANSMISSION_FLUID:
-//                carItemsHasMap.put(item, manualTransmission);
-//                break;
-//            case OIL:
-//                carItemsHasMap.put(item, oil);
-//                break;
-//            case POWER_STEERING_FLUID:
-//                carItemsHasMap.put(item, powerSteering);
-//                break;
-//            case RADIATOR_FLUID:
-//                carItemsHasMap.put(item, radiator);
-//                break;
-//            case ROTATION:
-//                carItemsHasMap.put(item, rotatation);
-//                break;
-//            case ROTORS:
-//                carItemsHasMap.put(item, rotors);
-//                break;
-//            case SOLENOID:
-//                carItemsHasMap.put(item, solenoid);
-//                break;
-//            case STARTER:
-//                carItemsHasMap.put(item, starter);
-//                break;
-//            case TIMING_BELTS:
-//                carItemsHasMap.put(item, timingBelts);
-//                break;
-//            case TIRES:
-//                carItemsHasMap.put(item, tires);
-//                break;
-//            default:
-//                carItemsHasMap.put(item, 0);
-//                break;
-//        }
-//    }
+    //endregion
 
 }

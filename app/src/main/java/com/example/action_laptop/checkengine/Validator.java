@@ -1,6 +1,7 @@
 package com.example.action_laptop.checkengine;
 
-import android.text.Editable;
+import java.util.List;
+import java.util.Map;
 
 /**
  * Created by Action Pants on 8/21/2017.
@@ -9,7 +10,7 @@ import android.text.Editable;
 public class Validator {
 
     //method to validate numeric input
-    public static boolean ValidateNumericInput(String input) {
+    public static boolean TryParseIntFromString(String input) {
         try {
             Integer.parseInt(input);
             return true;
@@ -17,4 +18,33 @@ public class Validator {
             return false;
         }
     }
+
+    //builds and returns a comma separated string
+    public String ToCommaSeparatedString(List<String> list){
+        //The Java 8 implementation of this method
+        // ...isn't supported by our lower targeted API
+        //return tableColumns.stream().collect(Collectors.joining(", "));
+
+        final String separator = ", ";
+
+        StringBuilder columnString = new StringBuilder();
+        for (String columnName : list) {
+            columnString.append(columnName + separator);
+        }
+
+        //remove the end comma and space
+        return columnString.substring(0, columnString.length() - separator.length());
+    }
+
+    //checks if the string parameter exists in the Enum (Class that extends Enum)
+    public <T extends Enum<T>> boolean IsStringAnEnum(String value, Class<T> tableColumnsEnum) {
+        T[] tableColumns = tableColumnsEnum.getEnumConstants();
+
+        for(Enum column : tableColumns) {
+            if (value.equals(column.toString()))
+                return true;
+        }
+        return false;
+    }
+
 }
