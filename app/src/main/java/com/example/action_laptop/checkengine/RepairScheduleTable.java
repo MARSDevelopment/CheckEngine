@@ -61,7 +61,7 @@ public class RepairScheduleTable extends CarValuesDBHandler{
         TIMING_BELTS_COLUMN("TimingBelts"),
         TIRES_COLUMN("Tires");
 
-        private String value;
+        private final String value;
 
         //one arg constructor
         //initializes each enum with the string hardcoded to it

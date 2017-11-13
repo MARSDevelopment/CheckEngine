@@ -11,12 +11,17 @@ import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.animation.AnimationUtils;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.TextSwitcher;
 import android.widget.TextView;
 
 public class MainActivity extends AppCompatActivity {
+
+    private CarInfoDBHandler carInfoDBHandler;
+    private GlobalValues globalValues;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -25,41 +30,70 @@ public class MainActivity extends AppCompatActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        //populates upcoming repairs
-        ListView listView = (ListView)findViewById(R.id.listViewUpcomingRepairs);
-        listView.setAdapter(new CarItemArrayAdapter(this, R.layout.car_list_item, CarValues.GetCarItemList(), RepairScheduleTable.TABLE_NAME, RepairScheduleTable.TableColumns.NAME_COLUMN.toString(), "Default"));
+        carInfoDBHandler = new CarInfoDBHandler(MainActivity.this, null);
+        globalValues = new GlobalValues(MainActivity.this);
 
-        //dialog pop up for updating current mileage
+        //region Current Mileage Section
+        //add animation events and set text
+        final TextSwitcher txtSwitcherCurrentMileage = (TextSwitcher) findViewById(R.id.txtSwitcherHomeCurrentMileageValue);
+        txtSwitcherCurrentMileage.setInAnimation(AnimationUtils.loadAnimation(this, android.R.anim.fade_in));
+        txtSwitcherCurrentMileage.setOutAnimation(AnimationUtils.loadAnimation(this, android.R.anim.fade_out));
+        txtSwitcherCurrentMileage.setText(globalValues.Get(GlobalValues.CarInfo.CURRENT_MILEAGE.toString()));
+
+        //puts event listener on section that contains the current mileage.
         LinearLayout linearLayoutCurrentMileageContainer = (LinearLayout) findViewById(R.id.linearLayoutCurrentMilageContainer);
         linearLayoutCurrentMileageContainer.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //initialize dialog box components
+                //initialize dialog box
                 v = LayoutInflater.from(MainActivity.this).inflate(R.layout.car_item_input_dialog, null);
-                final ComponentContainers.CarInputDialog carInputDialog = new ComponentContainers.CarInputDialog();
-                carInputDialog.carInputHeader = (TextView) v.findViewById(R.id.txtViewCarDialogItemHeader);
-                carInputDialog.carInputValue = (EditText) v.findViewById(R.id.txtEditCarDialogItemValue);
-
                 //set dialog box components' properties and behaviors
-                carInputDialog.carInputHeader.setText(Html.fromHtml("<u>"+getResources().getString(R.string.home_current_mileage)+"</u>"));
-                carInputDialog.carInputValue.setText("50000");
+                final ComponentContainers.InputDialog inputDialog = new ComponentContainers.InputDialog(v);
+                inputDialog.txtViewInputHeader.setText(Html.fromHtml("<u>"+getResources().getString(R.string.home_current_mileage)+"</u>"));
+                inputDialog.editViewInputValue.setText(globalValues.Get(GlobalValues.CarInfo.CURRENT_MILEAGE.toString()));
+                //pop up dialog behavior for updating current mileage
                 AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
                 builder.setView(v)
                         .setPositiveButton(R.string.global_save, new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialogInterface, int which) {
-                                //TODO set behavior for when Save is clicked
+                            //behavior for when Save is clicked
+                                if(Validator.TryParseToInt(inputDialog.editViewInputValue.getText().toString())){
+                                    UpdateCarMileage(Integer.parseInt(inputDialog.editViewInputValue.getText().toString()));
+                                } else {
+                                    //TODO behavior for if the text doesn't parse as int
+                                }
                             }
                         })
-                        .setNegativeButton(R.string.global_cancel, null);
+                        .setNegativeButton(R.string.global_cancel, null)
+                        .setOnDismissListener(new DialogInterface.OnDismissListener() {
+                            //TODO works for now, but may need to start converting Activities to run on threads so UI updates can happen more fluidly
+                            @Override
+                            public void onDismiss(final DialogInterface arg0) {
+                                try {
+                                    //delay animation
+                                    Thread.sleep(500);
+                                    txtSwitcherCurrentMileage.setText(globalValues.Get(GlobalValues.CarInfo.CURRENT_MILEAGE.toString()));
+                                } catch (InterruptedException e) {
+                                    e.printStackTrace();
+                                }
+                            }
+                        });;
                 AlertDialog carInputAlertDialog = builder.create();
                 carInputAlertDialog.show();
             }
         });
+        //endregion
+
+        //region Upcoming Repairs
+        //populates upcoming repairs
+        ListView listView = (ListView)findViewById(R.id.listViewUpcomingRepairs);
+        listView.setAdapter(new CarItemArrayAdapter(this, R.layout.car_list_item, CarValues.GetCarItemList(), RepairScheduleTable.TABLE_NAME, RepairScheduleTable.TableColumns.NAME_COLUMN.toString(),
+                globalValues.Get(GlobalValues.CarInfo.CAR_NAME.toString())));
+        //endregion
     }
 
-    //region App Dropdown Overrides
-
+    //region Dropdown Menu Overrides
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
@@ -76,6 +110,13 @@ public class MainActivity extends AppCompatActivity {
         MainMenu.ActivitySwitchboard(this, item, new Intent());
         return super.onOptionsItemSelected(item);
     }
+    //endregion
 
-    //endregion  Overrides
+    //region Helper Methods
+    public void UpdateCarMileage(int currentMileage){
+        carInfoDBHandler.UpdateCarCurrentMileage(new GlobalValues(this).Get(GlobalValues.CarInfo.CAR_NAME.toString()), currentMileage);
+        globalValues.Set(GlobalValues.CarInfo.CURRENT_MILEAGE.toString(), String.valueOf(currentMileage));
+    }
+
+    //endregion
 }

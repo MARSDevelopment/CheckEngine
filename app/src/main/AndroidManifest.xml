@@ -35,7 +35,11 @@
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".LastRepairedActivity"
-            android:label="@string/title_activity_last_repaired"
+            android:label="@string/last_repaired_title"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".GarageActivity"
+            android:label="@string/garage_title"
             android:theme="@style/AppTheme.NoActionBar"></activity>
     </application>
 

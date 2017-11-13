@@ -17,6 +17,7 @@
     <string name="action_repair_schedule">Repair Schedule</string>
     <string name="action_last_repaired">Last Repaired</string>
     <string name="action_notifications">Notifications</string>
+    <string name="action_garage">Garage</string>
 
     //Car Categories Strings
     <string name="engine">Engine</string>
@@ -52,6 +53,7 @@
     <string name="repair_schedule_hint">How Often Should These Be Repaired?</string>
 
     //Last Repaired Activity
+    <string name="last_repaired_title">Last Repaired</string>
     <string name="last_repaired_hint">When Was The Last Time These Were Repaired?</string>
 
     //car_list_item.xml
@@ -64,7 +66,13 @@
     <string name="notification_locations">Where would you like to see notifications?</string>
     <string name="notification_bar">Android Notification Bar</string>
     <string name="notification_lock_screen">Lock Screen Notifications</string>
-    <string name="title_activity_last_repaired">Last Repaired</string>
+    <string name="notification_frequency">How Frequently?</string>
+
+    //Garage
+    <string name="garage_title">GarageActivity</string>
+    <string name="garage_make">Make</string>
+    <string name="garage_model">Model</string>
+    <string name="garage_year">Year</string>
 
 
 </resources>

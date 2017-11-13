@@ -19,7 +19,7 @@ public class LastRepairedActivity extends AppCompatActivity {
 
         ListView listView = (ListView) findViewById(R.id.listViewLastRepairedList);
         listView.setAdapter(new CarItemArrayAdapter(this, R.layout.car_list_item, CarValues.GetCarItemList(), LastRepairedTable.TABLE_NAME,
-                                                        LastRepairedTable.TableColumns.RELATED_REPAIR_SCHEDULE_NAME_COLUMN.toString(), "Default"));
+                                                        LastRepairedTable.TableColumns.RELATED_REPAIR_SCHEDULE_NAME_COLUMN.toString(),  new GlobalValues(this).Get(GlobalValues.CarInfo.CAR_NAME.toString())));
     }
 
     //region App Menu Overrides

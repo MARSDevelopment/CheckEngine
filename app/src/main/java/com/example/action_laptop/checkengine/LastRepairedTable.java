@@ -10,7 +10,7 @@ import java.util.Map;
  * Created by Action-Laptop on 10/7/2017.
  */
 
-public class LastRepairedTable extends CarValuesDBHandler implements ICarValuesTable {
+public class LastRepairedTable extends CarValuesDBHandler {
     public static final String TABLE_NAME = "LastRepaired";
 
     //region String to be Used Only to Create the Default Repair Schedule Table Structure
@@ -61,7 +61,7 @@ public class LastRepairedTable extends CarValuesDBHandler implements ICarValuesT
         TIMING_BELTS_COLUMN("TimingBelts"),
         TIRES_COLUMN("Tires");
 
-        private String value;
+        private final String value;
 
         //one arg constructor
         //initializes each enum with the string hardcoded to it

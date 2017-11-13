@@ -17,8 +17,9 @@ public class RepairScheduleActivity extends AppCompatActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        ListView listView = (ListView)findViewById(R.id.listViewCarSettings);
-        listView.setAdapter(new CarItemArrayAdapter(this, R.layout.car_list_item, CarValues.GetCarItemList(), RepairScheduleTable.TABLE_NAME, RepairScheduleTable.TableColumns.NAME_COLUMN.toString(), "Default"));
+        ListView listView = (ListView) findViewById(R.id.listViewCarSettings);
+        listView.setAdapter(new CarItemArrayAdapter(this, R.layout.car_list_item, CarValues.GetCarItemList(), RepairScheduleTable.TABLE_NAME,
+                                                        RepairScheduleTable.TableColumns.NAME_COLUMN.toString(), new GlobalValues(this).Get(GlobalValues.CarInfo.CAR_NAME.toString())));
     }
 
     //region App Menu Overrides

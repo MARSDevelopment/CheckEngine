@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <TableRow
+        android:id="@+id/tblRowCarInfoParent"
+        android:layout_width="match_parent"
+        android:weightSum="20"
+        android:layout_height="40sp" >
+
+        <CheckBox
+            android:id="@+id/chkBoxCarInfoInUse"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:focusable="false"/>
+
+        <TextView
+            android:id="@+id/txtCarInfoName"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_weight="9"
+            android:gravity="left|center_vertical"
+            android:text="@string/global_placeholder"
+            android:textSize="16sp" />
+
+        <TextView
+            android:id="@+id/txtCarInfoCurrentMileage"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_weight="8"
+            android:gravity="right|center_vertical"
+            android:paddingRight="5sp"
+            android:text="@string/global_placeholder"
+            android:textSize="16sp" />
+
+        <TextView
+            android:id="@+id/txtViewMileAbbreviation"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_weight="2"
+            android:gravity="left|center_vertical"
+            android:text="@string/settings_mi" />
+
+
+    </TableRow>
+
+</LinearLayout>

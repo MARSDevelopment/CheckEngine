@@ -10,9 +10,18 @@ import java.util.Map;
 public class Validator {
 
     //method to validate numeric input
-    public static boolean TryParseIntFromString(String input) {
+    public static boolean TryParseToInt(String input) {
         try {
             Integer.parseInt(input);
+            return true;
+        } catch (NumberFormatException e) {
+            return false;
+        }
+    }
+
+    public static boolean TryParseToInt(Object input) {
+        try {
+            Integer.parseInt(input.toString());
             return true;
         } catch (NumberFormatException e) {
             return false;

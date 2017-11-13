@@ -1,6 +1,5 @@
 package com.example.action_laptop.checkengine;
 
-import java.util.HashMap;
 import java.util.*;
 
 /**
@@ -10,7 +9,7 @@ import java.util.*;
 public class CarValues{
 
     //region Variables
-    public Map<Enum, Integer> carItemsHasMap = new LinkedHashMap<>();
+    public Map<Enum, Object> carItemsHashMap = new LinkedHashMap<>();
 
     public enum CarItems {
         AIR_FILTER("AirFilter"),
@@ -32,7 +31,7 @@ public class CarValues{
         TIMING_BELTS("TimingBelts"),
         TIRES("Tires");
 
-        private String value;
+        private final String value;
 
         //returns string associated with enum
         private String getValue() {
@@ -57,7 +56,7 @@ public class CarValues{
     //No Arg Constructor
     public CarValues(){
         for (CarItems item : CarItems.values()){
-            carItemsHasMap.put(item, 0);
+            carItemsHashMap.put(item, 0);
         }
     }
 
@@ -122,147 +121,147 @@ public class CarValues{
 
     //region Getters and Setters
     public int getAirFilter() {
-        return carItemsHasMap.get(CarItems.AIR_FILTER);
+        return (int) carItemsHashMap.get(CarItems.AIR_FILTER);
     }
 
     public void setAirFilter(int airFilter) {
-        carItemsHasMap.put(CarItems.AIR_FILTER, airFilter);
+        carItemsHashMap.put(CarItems.AIR_FILTER, airFilter);
     }
 
     public int getAlignment() {
-        return carItemsHasMap.get(CarItems.ALIGNMENT);
+        return (int) carItemsHashMap.get(CarItems.ALIGNMENT);
     }
 
     public void setAlignment(int alignment) {
-        carItemsHasMap.put(CarItems.ALIGNMENT, alignment);
+        carItemsHashMap.put(CarItems.ALIGNMENT, alignment);
     }
 
     public int getAlternator() {
-        return carItemsHasMap.get(CarItems.ALTERNATOR);
+        return (int) carItemsHashMap.get(CarItems.ALTERNATOR);
     }
 
     public void setAlternator(int alternator) {
-        carItemsHasMap.put(CarItems.ALTERNATOR, alternator);
+        carItemsHashMap.put(CarItems.ALTERNATOR, alternator);
     }
 
     public int getAutoTransmission() {
-        return carItemsHasMap.get(CarItems.AUTOMATIC_TRANSMISSION_FLUID);
+        return (int) carItemsHashMap.get(CarItems.AUTOMATIC_TRANSMISSION_FLUID);
     }
 
     public void setAutoTransmission(int autoTransmission) {
-        carItemsHasMap.put(CarItems.AUTOMATIC_TRANSMISSION_FLUID, autoTransmission);
+        carItemsHashMap.put(CarItems.AUTOMATIC_TRANSMISSION_FLUID, autoTransmission);
     }
 
     public int getBrakeFluid() {
-        return carItemsHasMap.get(CarItems.BRAKE_FLUID);
+        return (int) carItemsHashMap.get(CarItems.BRAKE_FLUID);
     }
 
     public void setBrakeFluid(int brakeFluid) {
-        carItemsHasMap.put(CarItems.BRAKE_FLUID, brakeFluid);
+        carItemsHashMap.put(CarItems.BRAKE_FLUID, brakeFluid);
     }
 
     public int getCoolant() {
-        return carItemsHasMap.get(CarItems.COOLANT);
+        return (int) carItemsHashMap.get(CarItems.COOLANT);
     }
 
     public void setCoolant(int coolant) {
-        carItemsHasMap.put(CarItems.COOLANT, coolant);
+        carItemsHashMap.put(CarItems.COOLANT, coolant);
     }
 
     public int getDiscBrakes() {
-        return carItemsHasMap.get(CarItems.DISC_BRAKES);
+        return (int) carItemsHashMap.get(CarItems.DISC_BRAKES);
     }
 
     public void setDiscBrakes(int discBrakes) {
-        carItemsHasMap.put(CarItems.DISC_BRAKES, discBrakes);
+        carItemsHashMap.put(CarItems.DISC_BRAKES, discBrakes);
     }
 
     public int getDrumBrakes() {
-        return carItemsHasMap.get(CarItems.DRUM_BRAKES);
+        return (int) carItemsHashMap.get(CarItems.DRUM_BRAKES);
     }
 
     public void setDrumBrakes(int drumBrakes) {
-        carItemsHasMap.put(CarItems.DRUM_BRAKES, drumBrakes);
+        carItemsHashMap.put(CarItems.DRUM_BRAKES, drumBrakes);
     }
 
     public int getManualTransmission() {
-        return carItemsHasMap.get(CarItems.MANUAL_TRANSMISSION_FLUID);
+        return (int) carItemsHashMap.get(CarItems.MANUAL_TRANSMISSION_FLUID);
     }
 
     public void setManualTransmission(int manualTransmission) {
-        carItemsHasMap.put(CarItems.MANUAL_TRANSMISSION_FLUID, manualTransmission);
+        carItemsHashMap.put(CarItems.MANUAL_TRANSMISSION_FLUID, manualTransmission);
     }
 
     public int getOil() {
-        return carItemsHasMap.get(CarItems.OIL);
+        return (int) carItemsHashMap.get(CarItems.OIL);
     }
 
     public void setOil(int oil) {
-        carItemsHasMap.put(CarItems.OIL, oil);
+        carItemsHashMap.put(CarItems.OIL, oil);
     }
 
     public int getPowerSteering() {
-        return carItemsHasMap.get(CarItems.POWER_STEERING_FLUID);
+        return (int) carItemsHashMap.get(CarItems.POWER_STEERING_FLUID);
     }
 
     public void setPowerSteering(int powerSteering) {
-        carItemsHasMap.put(CarItems.POWER_STEERING_FLUID, powerSteering);
+        carItemsHashMap.put(CarItems.POWER_STEERING_FLUID, powerSteering);
     }
 
     public int getRadiator() {
-        return carItemsHasMap.get(CarItems.RADIATOR_FLUID);
+        return (int) carItemsHashMap.get(CarItems.RADIATOR_FLUID);
     }
 
     public void setRadiator(int radiator) {
-        carItemsHasMap.put(CarItems.RADIATOR_FLUID, radiator);
+        carItemsHashMap.put(CarItems.RADIATOR_FLUID, radiator);
     }
 
     public int getRotation() {
-        return carItemsHasMap.get(CarItems.ROTATION);
+        return (int) carItemsHashMap.get(CarItems.ROTATION);
     }
 
     public void setRotation(int rotation) {
-        carItemsHasMap.put(CarItems.ROTATION, rotation);
+        carItemsHashMap.put(CarItems.ROTATION, rotation);
     }
 
     public int getRotors() {
-        return carItemsHasMap.get(CarItems.ROTORS);
+        return (int) carItemsHashMap.get(CarItems.ROTORS);
     }
 
     public void setRotors(int rotors) {
-        carItemsHasMap.put(CarItems.ROTORS, rotors);
+        carItemsHashMap.put(CarItems.ROTORS, rotors);
     }
 
     public int getSolenoid() {
-        return carItemsHasMap.get(CarItems.SOLENOID);
+        return (int) carItemsHashMap.get(CarItems.SOLENOID);
     }
 
     public void setSolenoid(int solenoid) {
-        carItemsHasMap.put(CarItems.SOLENOID, solenoid);
+        carItemsHashMap.put(CarItems.SOLENOID, solenoid);
     }
 
     public int getStarter() {
-        return carItemsHasMap.get(CarItems.STARTER);
+        return (int) carItemsHashMap.get(CarItems.STARTER);
     }
 
     public void setStarter(int starter) {
-        carItemsHasMap.put(CarItems.STARTER, starter);
+        carItemsHashMap.put(CarItems.STARTER, starter);
     }
 
     public int getTimingBelts() {
-        return carItemsHasMap.get(CarItems.TIMING_BELTS);
+        return (int) carItemsHashMap.get(CarItems.TIMING_BELTS);
     }
 
     public void setTimingBelts(int timingBelts) {
-        carItemsHasMap.put(CarItems.TIMING_BELTS, timingBelts);
+        carItemsHashMap.put(CarItems.TIMING_BELTS, timingBelts);
     }
 
     public int getTires() {
-        return carItemsHasMap.get(CarItems.TIRES);
+        return (int) carItemsHashMap.get(CarItems.TIRES);
     }
 
     public void setTires(int tires) {
-        carItemsHasMap.put(CarItems.TIRES, tires);
+        carItemsHashMap.put(CarItems.TIRES, tires);
     }
     //endregion
 

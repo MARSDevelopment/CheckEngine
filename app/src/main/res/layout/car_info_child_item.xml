@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <TableRow
+        android:id="@+id/tblRowCarInfoMake"
+        android:layout_width="match_parent"
+        android:layout_height="25sp"
+        android:weightSum="20">
+
+        <TextView
+            android:id="@+id/txtCarInfoMakeHeader"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_marginLeft="20sp"
+            android:layout_weight="10"
+            android:gravity="left|center_vertical"
+            android:text="@string/garage_make" />
+
+        <TextView
+            android:id="@+id/txtCarInfoMakeValue"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_marginRight="20sp"
+            android:layout_weight="10"
+            android:gravity="right|center_vertical"
+            android:text="@string/global_placeholder" />
+    </TableRow>
+
+    <TableRow
+        android:id="@+id/tblRowCarInfoModel"
+        android:layout_width="match_parent"
+        android:layout_height="25sp"
+        android:weightSum="20">
+
+        <TextView
+            android:id="@+id/txtCarInfoModelHeader"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_marginLeft="20sp"
+            android:layout_weight="10"
+            android:gravity="left|center_vertical"
+            android:text="@string/garage_model" />
+
+        <TextView
+            android:id="@+id/txtCarInfoModelValue"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_marginRight="20sp"
+            android:layout_weight="10"
+            android:gravity="right|center_vertical"
+            android:text="@string/global_placeholder" />
+    </TableRow>
+
+
+    <TableRow
+        android:id="@+id/tblRowCarInfoYear"
+        android:layout_width="match_parent"
+        android:layout_height="25sp"
+        android:weightSum="20">
+
+        <TextView
+            android:id="@+id/txtCarInfoYearHeader"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_marginLeft="20sp"
+            android:layout_weight="10"
+            android:gravity="left|center_vertical"
+            android:text="@string/garage_year" />
+
+        <TextView
+            android:id="@+id/txtCarInfoYearValue"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_marginRight="20sp"
+            android:layout_weight="10"
+            android:gravity="right|center_vertical"
+            android:text="@string/global_placeholder" />
+    </TableRow>
+
+
+
+</LinearLayout>

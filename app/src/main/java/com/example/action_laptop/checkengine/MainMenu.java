@@ -17,13 +17,15 @@ public class MainMenu {
                 context.startActivity(intent);
                 break;
             case R.id.action_last_repaired:
-                // TODO Handle Notification Menu Item
                 intent = new Intent(context, LastRepairedActivity.class);
                 context.startActivity(intent);
                 break;
             case R.id.action_notifications:
-                // TODO Handle Notification Menu Item
                 intent = new Intent(context, NotificationsActivity.class);
+                context.startActivity(intent);
+                break;
+            case R.id.action_garage:
+                intent = new Intent(context, GarageActivity.class);
                 context.startActivity(intent);
                 break;
             default:

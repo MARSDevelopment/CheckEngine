@@ -8,7 +8,6 @@ import android.database.sqlite.SQLiteException;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.support.annotation.NonNull;
 
-import java.security.KeyPair;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -24,6 +23,7 @@ public class DBHandler extends SQLiteOpenHelper {
     private static final int DATABASE_VERSION = 1;
     private static final String DATABASE_NAME = "CheckEngine.db";
     private SQLiteDatabase db;
+    private Context context;
 
     //region Failed Instance/Singleton Database Structure Attempt
 //    public static synchronized DBHandler getInstance(Context context) {
@@ -41,10 +41,11 @@ public class DBHandler extends SQLiteOpenHelper {
     //region Constructors
      public DBHandler(Context context, SQLiteDatabase.CursorFactory factory) {
         super(context, DATABASE_NAME, factory, DATABASE_VERSION);
+         this.context = context;
     }
     //endregion
 
-    //region Override Method for Creating App's Default SQLite Database
+    //region OnCreate Override Method - Creates App's Default SQLite Database
     @Override
     public void onCreate(SQLiteDatabase db) {
         final String defaultRowName = "Default";
@@ -53,12 +54,13 @@ public class DBHandler extends SQLiteOpenHelper {
         Map<String, String> contentValues = new HashMap<>();
 
         try {
+            //TODO deal with constructors that have string parameters
             //create repair schedule table and default row
             sql = "CREATE TABLE " + RepairScheduleTable.TABLE_NAME + " (" + RepairScheduleTable.createColumnsString + ")";
             db.execSQL(sql);
             CarValues repairScheduleDefaultCarValues = new CarValues(defaultRowName);
             contentValues.put(RepairScheduleTable.TableColumns.NAME_COLUMN.toString(), "'"+ defaultRowName +"'");
-            contentValues = DetermineValuesAddedToTable(RepairScheduleTable.TableColumns.class, contentValues, repairScheduleDefaultCarValues);
+            contentValues = DetermineValuesAddedToTable(RepairScheduleTable.TableColumns.class, contentValues, repairScheduleDefaultCarValues.carItemsHashMap);
             InsertDefaultRowIntoTable(RepairScheduleTable.TABLE_NAME, contentValues);
 
             //clear old data
@@ -69,9 +71,31 @@ public class DBHandler extends SQLiteOpenHelper {
             db.execSQL(sql);
             CarValues lastRepairedDefaultCarValues = new CarValues();
             contentValues.put(LastRepairedTable.TableColumns.RELATED_REPAIR_SCHEDULE_NAME_COLUMN.toString(), "'"+ defaultRowName +"'");
-            contentValues = DetermineValuesAddedToTable(LastRepairedTable.TableColumns.class, contentValues, lastRepairedDefaultCarValues);
+            contentValues = DetermineValuesAddedToTable(LastRepairedTable.TableColumns.class, contentValues, lastRepairedDefaultCarValues.carItemsHashMap);
             InsertDefaultRowIntoTable(LastRepairedTable.TABLE_NAME, contentValues);
 
+            contentValues = new HashMap<>();
+
+            //create notifications table and default row
+            sql = "CREATE TABLE " + NotificationsTable.TABLE_NAME + " (" + NotificationsTable.createColumnsString + ")";
+            db.execSQL(sql);
+            NotificationValues notificationDefaultValues = new NotificationValues();
+            contentValues = DetermineValuesAddedToTable(NotificationsTable.TableColumns.class, contentValues, notificationDefaultValues.notificationItemsHasMap);
+            InsertDefaultRowIntoTable(NotificationsTable.TABLE_NAME, contentValues);
+
+            contentValues = new HashMap<>();
+
+            //create garage table and default row
+            sql = "CREATE TABLE " + GarageTable.TABLE_NAME + " (" + GarageTable.createColumnsString + ")";
+            db.execSQL(sql);
+            CarInfo defaultCarInfoValues = new CarInfo(defaultRowName);
+            contentValues = DetermineValuesAddedToTable(GarageTable.TableColumns.class, contentValues, defaultCarInfoValues.detailsHasMap);
+            InsertDefaultRowIntoTable(GarageTable.TABLE_NAME, contentValues);
+
+            //TODO initialize all global values: all notification settings
+            //set global app parameters
+            new GlobalValues(context).Set(GlobalValues.CarInfo.CAR_NAME.toString(), defaultRowName);
+            new GlobalValues(context).Set(GlobalValues.CarInfo.CURRENT_MILEAGE.toString(), String.valueOf(defaultCarInfoValues.getCurrentMileage()));
 
             //not working, I have no fucking idea why. it should
             //ContentValues contentValues = new ContentValues();   <------ would be used instead of Map
@@ -84,7 +108,7 @@ public class DBHandler extends SQLiteOpenHelper {
          * IMPORTANT - Do not close the database. The database close is handled by the inherited class (SQLiteOpenHelper) after onCreate has executed
          *             Closing the database will cause an exception. That was a hard learned lesson...
          */
-        }catch (SQLiteException sqlEx) {
+        } catch (SQLiteException sqlEx) {
             //TODO Handle Exceptions
             sqlEx = sqlEx;
         } catch (Exception ex) {
@@ -123,6 +147,37 @@ public class DBHandler extends SQLiteOpenHelper {
 
     //region Read/Select Methods
     //Retrieve All Values From Table
+    public Map<String, Object> SelectAllFromTable(@NonNull String tableName) {
+        Cursor cursor = null;
+        Map<String, Object> columnNameValueMap = new HashMap<>();
+        String sql = "SELECT * FROM " + tableName;
+
+        try {
+            OpenDBConnection();
+            cursor = db.rawQuery(sql, null);
+            cursor.moveToFirst();
+            do{
+                for(int i = 0; i < cursor.getColumnCount(); i++){
+                    columnNameValueMap.put(cursor.getColumnName(i), cursor.getString(i));
+                }
+            }
+            while(cursor.moveToNext());
+
+        } catch (SQLiteException sqlEx) {
+            //TODO Handle Exceptions
+            SQLiteException sqlEx2 = sqlEx;
+        } catch (Exception ex){
+            Exception ex2 = ex;
+        } finally {
+            CloseDBConnection();
+            cursor.close();
+        }
+
+        //moveToFirst is less expensive than getCount()
+        return columnNameValueMap.isEmpty() && columnNameValueMap.size() > 0 ? null : columnNameValueMap;
+    }
+
+    //Retrieve All Values From Table Row
     public Map<String, Object> SelectAllFromTableRow(@NonNull String tableName, @NonNull String tableRow, @NonNull String tableRowValue){
         Cursor cursor = null;
         Map<String, Object> columnNameValueMap = new HashMap<>();
@@ -235,8 +290,36 @@ public class DBHandler extends SQLiteOpenHelper {
     //endregion
 
     //region Update Methods
-    public void SetValueInTableRow(@NonNull String tableName){
+    public void UpdateValuesInTable(@NonNull String tableName, @NonNull StringBuilder columnsValuePairs, StringBuilder condition){
+        String sql;
 
+        sql = "UPDATE " + tableName + " SET " + columnsValuePairs + " WHERE " + condition;
+
+        try {
+            OpenDBConnection();
+            db.execSQL(sql);
+        } catch (Exception e){
+            //TODO Handle Exception
+            Exception ex = e;
+        } finally {
+            CloseDBConnection();
+        }
+    }
+
+    public void UpdateAllValuesInTable(@NonNull String tableName, @NonNull StringBuilder columnsValuePairs){
+        String sql;
+
+        sql = "UPDATE " + tableName + " SET " + columnsValuePairs;
+
+        try {
+            OpenDBConnection();
+            db.execSQL(sql);
+        } catch (Exception e){
+            //TODO Handle Exception
+            Exception ex = e;
+        } finally {
+            CloseDBConnection();
+        }
     }
 
     //endregion Method
@@ -269,14 +352,18 @@ public class DBHandler extends SQLiteOpenHelper {
     //region CRUD Helper Methods
 
     //validate the value to be inserted into the table
-    private <T extends Enum<T>> Map<String,String> DetermineValuesAddedToTable(Class<T> tableColumnsEnum, Map<String, String> contentValues, CarValues carValues) {
+    private <T extends Enum<T>> Map<String, String> DetermineValuesAddedToTable(Class<T> tableColumnsEnum, Map<String, String> contentValues, Map<Enum, Object> valuesToCheck) {
         Validator validator = new Validator();
+        String entryValue;
 
-        for (Map.Entry<Enum, Integer> entry : carValues.carItemsHasMap.entrySet()) {
+        for (Map.Entry<Enum, Object> entry : valuesToCheck.entrySet()) {
             //checks if the string value of each entry in the map is a string that exists in the tableColumnsEnum
-            if(validator.IsStringAnEnum(entry.getKey().toString(), tableColumnsEnum))
+            if(validator.IsStringAnEnum(entry.getKey().toString(), tableColumnsEnum)) {
                 //put the key and value pair into the map that will be used for the SQL statement
-                contentValues.put(entry.getKey().toString(), entry.getValue().toString());
+                //string values require single quotes around them when entered into SQL DB
+                entryValue = Validator.TryParseToInt(entry.getValue()) ? entry.getValue().toString() : "'" + entry.getValue().toString() + "'";
+                contentValues.put(entry.getKey().toString(), entryValue);
+            }
         }
         return contentValues;
     }

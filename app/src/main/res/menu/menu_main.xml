@@ -2,13 +2,15 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     tools:context="com.example.action_laptop.checkengine.MainActivity" >
-    <item android:id="@+id/action_home"
+    <item
+        android:id="@+id/action_home"
         android:title="@string/action_home"
         android:orderInCategory="103"
         app:showAsAction="never" />
-    <item android:id="@+id/action_repair_schedule"
+    <item
+        android:id="@+id/action_repair_schedule"
         android:title="@string/action_repair_schedule"
-        android:orderInCategory="103"
+        android:orderInCategory="104"
         app:showAsAction="never" />
     <item
         android:id="@+id/action_last_repaired"
@@ -18,4 +20,8 @@
         android:id="@+id/action_notifications"
         android:orderInCategory="106"
         android:title="@string/action_notifications" />
+    <item
+        android:id="@+id/action_garage"
+        android:orderInCategory="107"
+        android:title="@string/action_garage" />
 </menu>

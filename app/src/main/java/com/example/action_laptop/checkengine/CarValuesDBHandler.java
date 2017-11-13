@@ -68,8 +68,14 @@ public class CarValuesDBHandler extends DBHandler {
         }
     }
 
+    public void UpdateTableColumn(@NonNull String tableName, @NonNull String carName, @NonNull String tableRowWithCarName, @NonNull String tableColumn, @NonNull int value){
+        StringBuilder columnValuePairs = new StringBuilder(tableColumn + "=" + value);
+        StringBuilder whereCondition = new StringBuilder(tableRowWithCarName + "='" + carName + "'");
+        UpdateValuesInTable(tableName, columnValuePairs, whereCondition);
+    }
+
     private int GetValueFromColumnName(String columnName){
         //try to parse the string as an int. return the parsed int if true, else return 0
-        return Validator.TryParseIntFromString((String) columnNameValues.get(columnName)) ? Integer.valueOf((String) columnNameValues.get(columnName)) : 0;
+        return Validator.TryParseToInt((String) columnNameValues.get(columnName)) ? Integer.valueOf((String) columnNameValues.get(columnName)) : 0;
     }
 }
