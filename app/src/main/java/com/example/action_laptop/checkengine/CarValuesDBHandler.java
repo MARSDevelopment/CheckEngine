@@ -59,7 +59,7 @@ public class CarValuesDBHandler extends DBHandler {
             for (Map.Entry<Enum, Integer> entry : valuesToAdd.entrySet()) {
                 //checks if the string value of each entry in the map is a string that exists in the tableColumnsEnum
                 if(validator.IsStringAnEnum(entry.getKey().toString(), tableColumnsEnum))
-                    //TODO Check if entry int value is formatted as expected by the database
+                    //TODO Check if entry int value is formatted as expected by the database. TryParse, length
                     values.put(entry.getKey().toString(), entry.getValue());
             }
 

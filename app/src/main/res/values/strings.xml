@@ -4,6 +4,7 @@
     <string name="app_name_repair_schedule">Repair Schedule</string>
     <string name="app_name_last_repaired">Last Repaired</string>
     <string name="app_name_notifications">Notifications</string>
+    <string name="app_name_garage">Garage</string>
 
     //Global
     <string name="global_placeholder">PlaceHolder</string>
@@ -69,7 +70,7 @@
     <string name="notification_frequency">How Frequently?</string>
 
     //Garage
-    <string name="garage_title">GarageActivity</string>
+    <string name="garage_title">Garage</string>
     <string name="garage_make">Make</string>
     <string name="garage_model">Model</string>
     <string name="garage_year">Year</string>

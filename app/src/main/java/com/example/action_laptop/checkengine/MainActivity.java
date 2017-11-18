@@ -12,16 +12,20 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.animation.AnimationUtils;
-import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextSwitcher;
-import android.widget.TextView;
+
+import java.util.ArrayList;
+import java.util.LinkedHashMap;
+import java.util.Map;
 
 public class MainActivity extends AppCompatActivity {
 
     private CarInfoDBHandler carInfoDBHandler;
     private GlobalValues globalValues;
+    private ListView upcomingRepairListView;
+    private UpcomingRepairArrayAdapter upcomingRepairArrayAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -32,6 +36,7 @@ public class MainActivity extends AppCompatActivity {
 
         carInfoDBHandler = new CarInfoDBHandler(MainActivity.this, null);
         globalValues = new GlobalValues(MainActivity.this);
+        CarValuesDBHandler carValuesDBHandler = new CarValuesDBHandler(MainActivity.this, null);
 
         //region Current Mileage Section
         //add animation events and set text
@@ -60,6 +65,13 @@ public class MainActivity extends AppCompatActivity {
                             //behavior for when Save is clicked
                                 if(Validator.TryParseToInt(inputDialog.editViewInputValue.getText().toString())){
                                     UpdateCarMileage(Integer.parseInt(inputDialog.editViewInputValue.getText().toString()));
+//                                    if(upcomingRepairListView != null)
+//                                        runOnUiThread(new Runnable() {
+//                                            @Override
+//                                            public void run() {
+//                                                upcomingRepairArrayAdapter.notifyDataSetChanged();
+//                                            }
+//                                        });
                                 } else {
                                     //TODO behavior for if the text doesn't parse as int
                                 }
@@ -78,7 +90,7 @@ public class MainActivity extends AppCompatActivity {
                                     e.printStackTrace();
                                 }
                             }
-                        });;
+                        });
                 AlertDialog carInputAlertDialog = builder.create();
                 carInputAlertDialog.show();
             }
@@ -86,10 +98,30 @@ public class MainActivity extends AppCompatActivity {
         //endregion
 
         //region Upcoming Repairs
-        //populates upcoming repairs
-        ListView listView = (ListView)findViewById(R.id.listViewUpcomingRepairs);
-        listView.setAdapter(new CarItemArrayAdapter(this, R.layout.car_list_item, CarValues.GetCarItemList(), RepairScheduleTable.TABLE_NAME, RepairScheduleTable.TableColumns.NAME_COLUMN.toString(),
-                globalValues.Get(GlobalValues.CarInfo.CAR_NAME.toString())));
+
+        //region Algorithm to determine which repairs to flag
+        Map<String, Integer> upcomingRepairs = new LinkedHashMap<>();
+        Map<Enum, Object> lastRepaired = (carValuesDBHandler.GetRowFrom(LastRepairedTable.TABLE_NAME, LastRepairedTable.TableColumns.RELATED_REPAIR_SCHEDULE_NAME_COLUMN.toString(), globalValues.Get(GlobalValues.CarInfo.CAR_NAME.toString()))).carItemsHashMap;
+        Map<Enum, Object> repairSchedule = (carValuesDBHandler.GetRowFrom(RepairScheduleTable.TABLE_NAME, RepairScheduleTable.TableColumns.NAME_COLUMN.toString(), globalValues.Get(GlobalValues.CarInfo.CAR_NAME.toString()))).carItemsHashMap;
+        int notificationThreshold = Integer.parseInt(globalValues.Get(NotificationsTable.TableColumns.MILEAGE_THRESHOLD_COLUMN.toString()));
+        int currentMileage = Integer.parseInt(globalValues.Get(GlobalValues.CarInfo.CURRENT_MILEAGE.toString()));
+
+        for (Map.Entry<Enum, Object> lastRepairedEntry : lastRepaired.entrySet()){
+            int repairScheduleValue = (int)repairSchedule.get(lastRepairedEntry.getKey());
+            int lastRepairedValue = (int)lastRepairedEntry.getValue();
+
+            int nextRepairMileage = lastRepairedValue + repairScheduleValue;
+            int remainingMileage = nextRepairMileage - currentMileage;
+
+            if (remainingMileage <= notificationThreshold)
+                upcomingRepairs.put(lastRepairedEntry.getKey().toString(), remainingMileage);
+        }
+        //endregion
+
+        upcomingRepairListView = (ListView) findViewById(R.id.listViewUpcomingRepairs);
+        upcomingRepairArrayAdapter = new UpcomingRepairArrayAdapter(this, R.layout.upcoming_repair_item, new ArrayList<>(upcomingRepairs.keySet()), globalValues.Get(GlobalValues.CarInfo.CAR_NAME.toString()),
+                upcomingRepairs);
+        upcomingRepairListView.setAdapter(upcomingRepairArrayAdapter);
         //endregion
     }
 

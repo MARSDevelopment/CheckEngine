@@ -6,6 +6,7 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteException;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.provider.Settings;
 import android.support.annotation.NonNull;
 
 import java.util.HashMap;
@@ -52,6 +53,7 @@ public class DBHandler extends SQLiteOpenHelper {
         String sql;
         this.db = db;
         Map<String, String> contentValues = new HashMap<>();
+        GlobalValues globalValues = new GlobalValues(context);
 
         try {
             //TODO deal with constructors that have string parameters
@@ -94,8 +96,13 @@ public class DBHandler extends SQLiteOpenHelper {
 
             //TODO initialize all global values: all notification settings
             //set global app parameters
-            new GlobalValues(context).Set(GlobalValues.CarInfo.CAR_NAME.toString(), defaultRowName);
-            new GlobalValues(context).Set(GlobalValues.CarInfo.CURRENT_MILEAGE.toString(), String.valueOf(defaultCarInfoValues.getCurrentMileage()));
+            globalValues.Set(GlobalValues.CarInfo.CAR_NAME.toString(), defaultRowName);
+            globalValues.Set(GlobalValues.CarInfo.CURRENT_MILEAGE.toString(), String.valueOf(defaultCarInfoValues.getCurrentMileage()));
+            globalValues.Set(NotificationsTable.TableColumns.MILEAGE_THRESHOLD_COLUMN.toString(), String.valueOf(notificationDefaultValues.getMileageThreshold()));
+            globalValues.Set(NotificationsTable.TableColumns.FREQUENCY_COLUMN.toString(), String.valueOf(notificationDefaultValues.getFrequency()));
+            globalValues.Set(NotificationsTable.TableColumns.ANDROID_BAR_COLUMN.toString(), String.valueOf(notificationDefaultValues.getAndroidBar()));
+            globalValues.Set(NotificationsTable.TableColumns.LOCK_SCREEN_COLUMN.toString(), String.valueOf(notificationDefaultValues.getLockScreen()));
+
 
             //not working, I have no fucking idea why. it should
             //ContentValues contentValues = new ContentValues();   <------ would be used instead of Map

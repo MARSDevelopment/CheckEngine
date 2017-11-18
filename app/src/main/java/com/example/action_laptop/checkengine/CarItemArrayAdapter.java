@@ -10,10 +10,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
-import android.widget.EditText;
-import android.widget.TableRow;
-import android.widget.TextSwitcher;
-import android.widget.TextView;
 
 import java.util.List;
 
@@ -30,105 +26,93 @@ class CarItemArrayAdapter extends ArrayAdapter<String> {
     private String carName;
     private int carItemLayout;
     private Context context;
-    private CarValues carValues;
+    private String tableRowCarName;
+    private Object[] itemHeaders;
+    private Object[] itemValues;
     //endregion
 
     //region Constructors
-    CarItemArrayAdapter(@NonNull Context context, @LayoutRes int resource, @NonNull List<String> objects, String tableName, String tableRowCarName, String carName) {
+    public CarItemArrayAdapter(@NonNull Context context, @LayoutRes int resource, @NonNull List<String> objects, String tableName, String tableRowCarName, String carName) {
         super(context, resource, objects);
+
         carItemLayout = resource;
         this.context = context;
         this.tableName = tableName;
         this.carName = carName;
-        carValues = new CarValuesDBHandler(context, null).GetRowFrom(tableName, tableRowCarName, carName);
+        this.tableRowCarName = tableRowCarName;
+        CarValues carValues = new CarValuesDBHandler(context, null).GetRowFrom(tableName, tableRowCarName, carName);
+        itemHeaders = carValues.carItemsHashMap.keySet().toArray();
+        itemValues = carValues.carItemsHashMap.values().toArray();
     }
     //endregion
 
     @NonNull
     @Override
     public View getView(final int position, @Nullable View convertView, @NonNull ViewGroup parent) {
-        CarListItemHolder mainCarListItemHolder;
-        final String carItemHeader = carValues.carItemsHashMap.keySet().toArray()[position].toString();
-        final String carItemValue = carValues.carItemsHashMap.values().toArray()[position].toString();
+        //Component Container
+        final CarListItemHolder carListItemHolder;
 
-        //populate ListView with instances of car_list_item.xml
         if (convertView == null) {
-            //initialize view components
             LayoutInflater inflater = LayoutInflater.from(getContext());
             convertView = inflater.inflate(carItemLayout, parent, false);
-
-            //set component properties
-            final CarListItemHolder carListItemHolder = new CarListItemHolder(convertView);
-            final View finalConvertView = convertView;
-            carListItemHolder.itemHeader.setText(carItemHeader);
-            carListItemHolder.itemValue.setText(carItemValue);
-            carListItemHolder.itemContainer.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    //initialize dialog box components
-                    v = LayoutInflater.from(context).inflate(R.layout.car_item_input_dialog, null);
-                    AlertDialog.Builder builder = new AlertDialog.Builder(context);
-                    //set dialog box components' properties and behaviors
-                    final InputDialog inputDialog = new InputDialog(v);
-                    inputDialog.txtViewInputHeader.setText(carItemHeader);
-                    inputDialog.editViewInputValue.setText(carItemValue);
-                    builder.setView(v)
-                            .setPositiveButton(R.string.global_save, new DialogInterface.OnClickListener() {
-                                @Override
-                                public void onClick(DialogInterface dialogInterface, int which) {
-                                    if(Validator.TryParseToInt(inputDialog.editViewInputValue.getText().toString()))
-                                        SaveValue(position, Integer.parseInt(inputDialog.editViewInputValue.getText().toString()));
-                                    else {
-                                        //TODO behavior for if the text doesn't parse as int
-                                    }
-                                }
-                            })
-                            .setNegativeButton(R.string.global_cancel, null)
-                            .setOnDismissListener(new DialogInterface.OnDismissListener() {
-                                //TODO works for now, but may need to start converting Activities to run on threads so UI updates can happen more fluidly
-                                @Override
-                                public void onDismiss(final DialogInterface arg0) {
-                                    try {
-                                        //delay animation
-                                        Thread.sleep(500);
-                                        carListItemHolder.itemValue.setText(inputDialog.editViewInputValue.getText().toString());
-                                    } catch (InterruptedException e) {
-                                        e.printStackTrace();
-                                    }
-                                }
-                            });
-                    AlertDialog carInputAlertDialog = builder.create();
-                    carInputAlertDialog.show();
-                }
-            });
-
-            convertView.setTag(carListItemHolder);
+            carListItemHolder = new CarListItemHolder(convertView);
         } else {
             //keeps the position of the ListView items
-            mainCarListItemHolder = (CarListItemHolder) convertView.getTag();
-            mainCarListItemHolder.itemHeader.setText(carItemHeader);
-            mainCarListItemHolder.itemValue.setText(carItemValue);
+            carListItemHolder = (CarListItemHolder) convertView.getTag();
         }
 
+        //populate ListView with instances of car_list_item.xml
+        carListItemHolder.itemHeader.setText(itemHeaders[position].toString());
+        carListItemHolder.itemValue.setText(itemValues[position].toString());
+        carListItemHolder.itemContainer.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                //initialize dialog box components
+                v = LayoutInflater.from(context).inflate(R.layout.car_item_input_dialog, null);
+                AlertDialog.Builder builder = new AlertDialog.Builder(context);
+                //set dialog box components' properties and behaviors
+                final InputDialog inputDialog = new InputDialog(v);
+                inputDialog.txtViewInputHeader.setText(itemHeaders[position].toString());
+                inputDialog.editViewInputValue.setText(itemValues[position].toString());
+                builder.setView(v)
+                        .setPositiveButton(R.string.global_save, new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialogInterface, int which) {
+                                if(Validator.TryParseToInt(inputDialog.editViewInputValue.getText().toString())) {
+                                    itemValues[position] = Integer.valueOf(inputDialog.editViewInputValue.getText().toString());
+                                    new CarValuesDBHandler(context, null).UpdateTableColumn(tableName, carName, tableRowCarName, itemHeaders[position].toString(),
+                                            Integer.valueOf(inputDialog.editViewInputValue.getText().toString()));
+                                } else {
+                                    //TODO behavior for if the text doesn't parse as int
+                                }
+                            }
+                        })
+                        .setNegativeButton(R.string.global_cancel, null)
+                        .setOnDismissListener(new DialogInterface.OnDismissListener() {
+                            //TODO works for now, but may need to start converting Activities to run on threads so UI updates can happen more fluidly
+                            @Override
+                            public void onDismiss(final DialogInterface arg0) {
+                                try {
+                                    //delay animation
+                                    Thread.sleep(500);
+                                    itemValues[position] = Integer.valueOf(inputDialog.editViewInputValue.getText().toString());
+                                    carListItemHolder.itemValue.setText(inputDialog.editViewInputValue.getText().toString());
+                                } catch (InterruptedException e) {
+                                    e.printStackTrace();
+                                }
+                            }
+                        });
+                AlertDialog carInputAlertDialog = builder.create();
+                carInputAlertDialog.show();
+            }
+        });
+
+        convertView.setTag(carListItemHolder);
         return convertView;
     }
 
     //region Helper Methods
 
-    private void SaveValue(int position, int value){
-        String tableColumn = carValues.carItemsHashMap.keySet().toArray()[position].toString();
-        String tableRowWithCarName;
-
-        if (context instanceof LastRepairedActivity)
-            tableRowWithCarName = LastRepairedTable.TableColumns.RELATED_REPAIR_SCHEDULE_NAME_COLUMN.toString();
-        else if (context instanceof RepairScheduleActivity)
-            tableRowWithCarName = RepairScheduleTable.TableColumns.NAME_COLUMN.toString();
-        else
-            throw new IllegalArgumentException("Could not find the table column name associated with the activity provided.");
-
-        carValues.carItemsHashMap.values().toArray()[position] = value;
-        new CarValuesDBHandler(context, null).UpdateTableColumn(tableName, carName, tableRowWithCarName, tableColumn, value);
-    }
 
     //endregion
 }
