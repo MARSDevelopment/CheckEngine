@@ -74,6 +74,7 @@ public class GarageActivity extends AppCompatActivity {
 //                }
 //                return true;
 //            }
+        //
 //@Override
 //public boolean onGroupClick(ExpandableListView parent, View v, int groupPosition, long id) {
 //    // We call collapseGroupWithAnimation(int) and
