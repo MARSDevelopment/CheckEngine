@@ -27,17 +27,15 @@ public class NotificationValues {
         }
 
         //returns int associated with enum
-        private int getValue() {
+        int getValue() {
             return value;
         }
 
         public NotificationFrequency GetEnumFromInt(int value){
             switch (value){
-                case 1:
-                    return NotificationFrequency.WEEKLY;
-                case 0:
-                default:
-                    return NotificationFrequency.DAILY;
+                case 1: return NotificationFrequency.WEEKLY;
+                case 0: return NotificationFrequency.DAILY;
+                default: throw new IllegalArgumentException();
             }
         }
     }

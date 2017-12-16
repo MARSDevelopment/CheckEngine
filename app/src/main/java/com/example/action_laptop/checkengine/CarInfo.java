@@ -1,6 +1,9 @@
 package com.example.action_laptop.checkengine;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -10,7 +13,7 @@ import java.util.Map;
 public class CarInfo {
 
     //region Variables
-    public Map<Enum, Object> detailsHasMap = new LinkedHashMap<>();
+    Map<Enum, Object> detailsHasMap = new LinkedHashMap<>();
 
     public enum Details {
         ID("ID"),
@@ -51,17 +54,41 @@ public class CarInfo {
         setInUse(false);
     }
 
-    public CarInfo(String str){
-        setName("Default");
+    public CarInfo(String name, boolean setInUse){
+        setName(name);
         setMake("Generic");
         setModel("Generic");
-        setYear(2006);
-        setCurrentMileage(50000);
-        setInUse(true);
+        setYear(0);
+        setCurrentMileage(0);
+        setInUse(setInUse);
+    }
+    //endregion
+
+    //creates and populates a string list from the car item enums
+    public static List<String> GetCarInfoList(){
+        ArrayList<String> carInfoList = new ArrayList<>();
+
+        for(Enum item : CarInfo.Details.values()){
+            carInfoList.add(item.toString());
+        }
+
+        return carInfoList;
     }
     //endregion
 
     //region Getters and Setters
+    public LinkedHashMap<Enum, Object> GetDetailsHashMap(){
+        return new LinkedHashMap<Enum, Object>(){
+            {
+                put(Details.NAME, getName());
+                put(Details.CURRENT_MILEAGE, getCurrentMileage());
+                put(Details.MAKE, getMake());
+                put(Details.MODEL, getModel());
+                put(Details.YEAR, getYear());
+            }
+        };
+    }
+
     public String getID(){
         return (String) detailsHasMap.get(Details.ID);
     }

@@ -71,17 +71,17 @@ class CarItemArrayAdapter extends ArrayAdapter<String> {
                 v = LayoutInflater.from(context).inflate(R.layout.car_item_input_dialog, null);
                 AlertDialog.Builder builder = new AlertDialog.Builder(context);
                 //set dialog box components' properties and behaviors
-                final InputDialog inputDialog = new InputDialog(v);
-                inputDialog.txtViewInputHeader.setText(itemHeaders[position].toString());
-                inputDialog.editViewInputValue.setText(itemValues[position].toString());
+                final SingleInputDialog singleInputDialog = new SingleInputDialog(v);
+                singleInputDialog.inputHeader.setText(itemHeaders[position].toString());
+                singleInputDialog.inputValue.setText(itemValues[position].toString());
                 builder.setView(v)
                         .setPositiveButton(R.string.global_save, new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialogInterface, int which) {
-                                if(Validator.TryParseToInt(inputDialog.editViewInputValue.getText().toString())) {
-                                    itemValues[position] = Integer.valueOf(inputDialog.editViewInputValue.getText().toString());
+                                if(Validator.TryParseToInt(singleInputDialog.inputValue.getText().toString())) {
+                                    itemValues[position] = Integer.valueOf(singleInputDialog.inputValue.getText().toString());
                                     new CarValuesDBHandler(context, null).UpdateTableColumn(tableName, carName, tableRowCarName, itemHeaders[position].toString(),
-                                            Integer.valueOf(inputDialog.editViewInputValue.getText().toString()));
+                                            Integer.valueOf(singleInputDialog.inputValue.getText().toString()));
                                 } else {
                                     //TODO behavior for if the text doesn't parse as int
                                 }
@@ -95,8 +95,8 @@ class CarItemArrayAdapter extends ArrayAdapter<String> {
                                 try {
                                     //delay animation
                                     Thread.sleep(500);
-                                    itemValues[position] = Integer.valueOf(inputDialog.editViewInputValue.getText().toString());
-                                    carListItemHolder.itemValue.setText(inputDialog.editViewInputValue.getText().toString());
+                                    itemValues[position] = Integer.valueOf(singleInputDialog.inputValue.getText().toString());
+                                    carListItemHolder.itemValue.setText(singleInputDialog.inputValue.getText().toString());
                                 } catch (InterruptedException e) {
                                     e.printStackTrace();
                                 }

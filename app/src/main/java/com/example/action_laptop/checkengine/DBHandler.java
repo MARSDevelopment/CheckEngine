@@ -6,10 +6,11 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteException;
 import android.database.sqlite.SQLiteOpenHelper;
-import android.provider.Settings;
 import android.support.annotation.NonNull;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -90,7 +91,7 @@ public class DBHandler extends SQLiteOpenHelper {
             //create garage table and default row
             sql = "CREATE TABLE " + GarageTable.TABLE_NAME + " (" + GarageTable.createColumnsString + ")";
             db.execSQL(sql);
-            CarInfo defaultCarInfoValues = new CarInfo(defaultRowName);
+            CarInfo defaultCarInfoValues = new CarInfo("Default", true);
             contentValues = DetermineValuesAddedToTable(GarageTable.TableColumns.class, contentValues, defaultCarInfoValues.detailsHasMap);
             InsertDefaultRowIntoTable(GarageTable.TABLE_NAME, contentValues);
 
@@ -99,7 +100,7 @@ public class DBHandler extends SQLiteOpenHelper {
             globalValues.Set(GlobalValues.CarInfo.CAR_NAME.toString(), defaultRowName);
             globalValues.Set(GlobalValues.CarInfo.CURRENT_MILEAGE.toString(), String.valueOf(defaultCarInfoValues.getCurrentMileage()));
             globalValues.Set(NotificationsTable.TableColumns.MILEAGE_THRESHOLD_COLUMN.toString(), String.valueOf(notificationDefaultValues.getMileageThreshold()));
-            globalValues.Set(NotificationsTable.TableColumns.FREQUENCY_COLUMN.toString(), String.valueOf(notificationDefaultValues.getFrequency()));
+            globalValues.Set(NotificationsTable.TableColumns.FREQUENCY_COLUMN.toString(), String.valueOf(NotificationValues.NotificationFrequency.DAILY.getValue()));
             globalValues.Set(NotificationsTable.TableColumns.ANDROID_BAR_COLUMN.toString(), String.valueOf(notificationDefaultValues.getAndroidBar()));
             globalValues.Set(NotificationsTable.TableColumns.LOCK_SCREEN_COLUMN.toString(), String.valueOf(notificationDefaultValues.getLockScreen()));
 
@@ -133,20 +134,14 @@ public class DBHandler extends SQLiteOpenHelper {
 
     //region DBConnectors
     private void OpenDBConnection(){
-        if(db == null){
+        if(db == null || !db.isOpen())
             db = getWritableDatabase();
-            return;
-        }
-
-        if(!db.isOpen()){
-            db = getWritableDatabase();
-            return;
-        }
     }
 
     private void CloseDBConnection(){
         if (db != null && db.isOpen())
             db.close();
+        db = null;
     }
     //endregion
 
@@ -215,10 +210,34 @@ public class DBHandler extends SQLiteOpenHelper {
         return columnNameValueMap.isEmpty() && columnNameValueMap.size() > 0 ? null : columnNameValueMap;
     }
 
-    public Object GetValueFromTableRow(@NonNull String tableName){
-        return new Object();
-    }
+    //Retrieve All Row Values From Column Name
+    public List<String> SelectAllFromColumnNameInTable(@NonNull String tableName, @NonNull String columnName){
+        Cursor cursor = null;
+        List<String> columnNameList = new ArrayList<>();
+        String sql = "SELECT "+ columnName +" FROM "+ tableName;
 
+        try {
+            OpenDBConnection();
+            cursor = db.rawQuery(sql, null);
+            cursor.moveToFirst();
+            do{
+                columnNameList.add(cursor.getString(0));
+            }
+            while(cursor.moveToNext());
+
+        } catch (SQLiteException sqlEx) {
+            //TODO Handle Exceptions
+            SQLiteException sqlEx2 = sqlEx;
+        } catch (Exception ex){
+            Exception ex2 = ex;
+        } finally {
+            CloseDBConnection();
+            assert cursor != null;
+            cursor.close();
+        }
+
+        return columnNameList;
+    }
     //endregion
 
     //region Create/Insert Methods
@@ -233,9 +252,9 @@ public class DBHandler extends SQLiteOpenHelper {
             //validate the value to be inserted into the table
             for (Map.Entry<String, Object> entry : contentValues.valueSet()) {
                 //checks if the string value of each entry in the map is a string that exists in the tableColumnsEnum
-                if(validator.IsStringAnEnum(entry.getKey().toString(), RepairScheduleTable.TableColumns.class))
+                if(validator.IsStringAnEnum(entry.getKey(), RepairScheduleTable.TableColumns.class))
                     //TODO Check if entry int value is formatted as expected by the database
-                    contentValues.put(entry.getKey().toString(), Integer.parseInt(entry.getValue().toString()));
+                    contentValues.put(entry.getKey(), Integer.parseInt(entry.getValue().toString()));
             }
 
             for(Map.Entry<String, Object> entry : contentValues.valueSet()){
@@ -250,20 +269,33 @@ public class DBHandler extends SQLiteOpenHelper {
                 " (" + columns + ")" +
                 " VALUES (" + values + ")";
 
-            try{
-                OpenDBConnection();
-                db.execSQL(sql);
-                // not working either, again no idea
-                //long insert = db.insert(tableName, null, values);
-            } catch (Exception e){
-                //TODO Handle Exceptions
-                e = e;
-            } finally{
-                CloseDBConnection();
-            }
+            ExecuteSqlAndHandleDB(sql);
         }
     }
 
+    public void InsertRowIntoTable(@NonNull String tableName, @NonNull Map<String, String> contentValues){
+        if(contentValues != null && contentValues.size() > 0 && tableName != null) {
+            StringBuilder values = new StringBuilder();
+            StringBuilder columns = new StringBuilder();
+            String sql;
+
+            for(Map.Entry<String, String> entry : contentValues.entrySet()){
+                columns.append(entry.getKey()).append(", ");
+                values.append(entry.getValue()).append(", ");
+            }
+
+            values.setLength(values.length() - 2);
+            columns.setLength(columns.length() - 2);
+
+            sql = "INSERT INTO " + tableName +
+                    " (" + columns + ")" +
+                    " VALUES (" + values + ")";
+
+            ExecuteSqlAndHandleDB(sql);
+        }
+    }
+
+    //Don't add DB open or close methods. This method is used only during database creation
     private void InsertDefaultRowIntoTable(@NonNull String tableName, @NonNull Map<String, String> contentValues){
         if(contentValues != null && contentValues.size() > 0 && tableName != null) {
             StringBuilder values = new StringBuilder();
@@ -302,15 +334,7 @@ public class DBHandler extends SQLiteOpenHelper {
 
         sql = "UPDATE " + tableName + " SET " + columnsValuePairs + " WHERE " + condition;
 
-        try {
-            OpenDBConnection();
-            db.execSQL(sql);
-        } catch (Exception e){
-            //TODO Handle Exception
-            Exception ex = e;
-        } finally {
-            CloseDBConnection();
-        }
+        ExecuteSqlAndHandleDB(sql);
     }
 
     public void UpdateAllValuesInTable(@NonNull String tableName, @NonNull StringBuilder columnsValuePairs){
@@ -318,15 +342,7 @@ public class DBHandler extends SQLiteOpenHelper {
 
         sql = "UPDATE " + tableName + " SET " + columnsValuePairs;
 
-        try {
-            OpenDBConnection();
-            db.execSQL(sql);
-        } catch (Exception e){
-            //TODO Handle Exception
-            Exception ex = e;
-        } finally {
-            CloseDBConnection();
-        }
+        ExecuteSqlAndHandleDB(sql);
     }
 
     //endregion Method
@@ -334,22 +350,9 @@ public class DBHandler extends SQLiteOpenHelper {
     //region Delete Methods
     public void DeleteRowFromTable(@NonNull String tableName, @NonNull String tableRowName, @NonNull String tableRowNameValue){
         if(tableRowName != null && tableName != null) {
-            SQLiteDatabase db = getWritableDatabase();
-            Cursor cursor = null;
 
-            try{
-                cursor = db.rawQuery("SELECT ID FROM " + tableName + " WHERE " + tableRowName + " = " + tableRowNameValue, null);
-                if(cursor.moveToFirst()){
-                    db.delete(tableName, tableRowName + " = ?", new String[]{ cursor.getString(0) });
-                }
-
-//                db.execSQL("DELETE FROM " + tableName + " WHERE ID = " + cursor.getString(0) + ";");
-            } catch (Exception e){
-                //TODO Handle Exceptions
-            } finally{
-                db.close();
-                cursor.close();
-            }
+            String sql = "DELETE FROM "+ tableName +" WHERE "+ tableRowName +" = '"+ tableRowNameValue +"'";
+            ExecuteSqlAndHandleDB(sql);
         }
     }
     //endregion
@@ -359,7 +362,7 @@ public class DBHandler extends SQLiteOpenHelper {
     //region CRUD Helper Methods
 
     //validate the value to be inserted into the table
-    private <T extends Enum<T>> Map<String, String> DetermineValuesAddedToTable(Class<T> tableColumnsEnum, Map<String, String> contentValues, Map<Enum, Object> valuesToCheck) {
+    public <T extends Enum<T>> Map<String, String> DetermineValuesAddedToTable(Class<T> tableColumnsEnum, Map<String, String> contentValues, Map<Enum, Object> valuesToCheck) {
         Validator validator = new Validator();
         String entryValue;
 
@@ -373,6 +376,18 @@ public class DBHandler extends SQLiteOpenHelper {
             }
         }
         return contentValues;
+    }
+
+    private void ExecuteSqlAndHandleDB (String sql){
+        try {
+            OpenDBConnection();
+            db.execSQL(sql);
+        } catch (Exception e){
+            //TODO Handle Exception
+            Exception ex = e;
+        } finally {
+            CloseDBConnection();
+        }
     }
 
     //endregion

@@ -77,29 +77,4 @@ class UpcomingRepairArrayAdapter extends ArrayAdapter<String> {
         return convertView;
     }
 
-    public void Refresh(){
-        if(true)
-            notifyDataSetChanged();
-    }
-
-    @Override
-    public void notifyDataSetChanged() {
-        upcomingRepairsMap = new LinkedHashMap<>();
-        Map<Enum, Object> lastRepaired = (carValuesDBHandler.GetRowFrom(LastRepairedTable.TABLE_NAME, LastRepairedTable.TableColumns.RELATED_REPAIR_SCHEDULE_NAME_COLUMN.toString(), globalValues.Get(GlobalValues.CarInfo.CAR_NAME.toString()))).carItemsHashMap;
-        Map<Enum, Object> repairSchedule = (carValuesDBHandler.GetRowFrom(RepairScheduleTable.TABLE_NAME, RepairScheduleTable.TableColumns.NAME_COLUMN.toString(), globalValues.Get(GlobalValues.CarInfo.CAR_NAME.toString()))).carItemsHashMap;
-        int notificationThreshold = Integer.parseInt(globalValues.Get(NotificationsTable.TableColumns.MILEAGE_THRESHOLD_COLUMN.toString()));
-        int currentMileage = Integer.parseInt(globalValues.Get(GlobalValues.CarInfo.CURRENT_MILEAGE.toString()));
-
-        for (Map.Entry<Enum, Object> lastRepairedEntry : lastRepaired.entrySet()){
-            int repairScheduleValue = (int)repairSchedule.get(lastRepairedEntry.getKey());
-            int lastRepairedValue = (int)lastRepairedEntry.getValue();
-
-            int nextRepairMileage = lastRepairedValue + repairScheduleValue;
-            int remainingMileage = nextRepairMileage - currentMileage;
-
-            if (remainingMileage <= notificationThreshold)
-                upcomingRepairsMap.put(lastRepairedEntry.getKey().toString(), remainingMileage);
-        }
-        super.notifyDataSetChanged();
-    }
 }

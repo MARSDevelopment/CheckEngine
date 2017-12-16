@@ -3,8 +3,12 @@ package com.example.action_laptop.checkengine;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.DefaultItemAnimator;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.text.Html;
 import android.view.LayoutInflater;
@@ -16,7 +20,6 @@ import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextSwitcher;
 
-import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
@@ -25,7 +28,10 @@ public class MainActivity extends AppCompatActivity {
     private CarInfoDBHandler carInfoDBHandler;
     private GlobalValues globalValues;
     private ListView upcomingRepairListView;
+    private RecyclerView upcomingRepairRcyView;
     private UpcomingRepairArrayAdapter upcomingRepairArrayAdapter;
+    private UpcomingRepairRecycleViewAdapter upcomingRepairRecycleViewAdapter;
+    private CarValuesDBHandler carValuesDBHandler;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -36,7 +42,7 @@ public class MainActivity extends AppCompatActivity {
 
         carInfoDBHandler = new CarInfoDBHandler(MainActivity.this, null);
         globalValues = new GlobalValues(MainActivity.this);
-        CarValuesDBHandler carValuesDBHandler = new CarValuesDBHandler(MainActivity.this, null);
+        carValuesDBHandler = new CarValuesDBHandler(MainActivity.this, null);
 
         //region Current Mileage Section
         //add animation events and set text
@@ -46,50 +52,71 @@ public class MainActivity extends AppCompatActivity {
         txtSwitcherCurrentMileage.setText(globalValues.Get(GlobalValues.CarInfo.CURRENT_MILEAGE.toString()));
 
         //puts event listener on section that contains the current mileage.
-        LinearLayout linearLayoutCurrentMileageContainer = (LinearLayout) findViewById(R.id.linearLayoutCurrentMilageContainer);
-        linearLayoutCurrentMileageContainer.setOnClickListener(new View.OnClickListener() {
+        LinearLayout linLayoutCurrentMileageContainer = (LinearLayout) findViewById(R.id.linLayoutCurrentMileageContainer);
+        linLayoutCurrentMileageContainer.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //initialize dialog box
+                //initialize dialog box then set dialog box components' properties and behaviors
                 v = LayoutInflater.from(MainActivity.this).inflate(R.layout.car_item_input_dialog, null);
-                //set dialog box components' properties and behaviors
-                final ComponentContainers.InputDialog inputDialog = new ComponentContainers.InputDialog(v);
-                inputDialog.txtViewInputHeader.setText(Html.fromHtml("<u>"+getResources().getString(R.string.home_current_mileage)+"</u>"));
-                inputDialog.editViewInputValue.setText(globalValues.Get(GlobalValues.CarInfo.CURRENT_MILEAGE.toString()));
+                final ComponentContainers.SingleInputDialog singleInputDialog = new ComponentContainers.SingleInputDialog(v);
+                singleInputDialog.inputHeader.setText(Html.fromHtml("<u>"+getResources().getString(R.string.home_current_mileage)+"</u>"));
+                singleInputDialog.inputValue.setText(globalValues.Get(GlobalValues.CarInfo.CURRENT_MILEAGE.toString()));
                 //pop up dialog behavior for updating current mileage
                 AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
+                final Handler handler = new Handler();
                 builder.setView(v)
                         .setPositiveButton(R.string.global_save, new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialogInterface, int which) {
                             //behavior for when Save is clicked
-                                if(Validator.TryParseToInt(inputDialog.editViewInputValue.getText().toString())){
-                                    UpdateCarMileage(Integer.parseInt(inputDialog.editViewInputValue.getText().toString()));
-//                                    if(upcomingRepairListView != null)
-//                                        runOnUiThread(new Runnable() {
-//                                            @Override
-//                                            public void run() {
-//                                                upcomingRepairArrayAdapter.notifyDataSetChanged();
-//                                            }
-//                                        });
+                                if(Validator.TryParseToInt(singleInputDialog.inputValue.getText().toString())){
+                                    UpdateCarMileage(Integer.parseInt(singleInputDialog.inputValue.getText().toString()));
+                                    txtSwitcherCurrentMileage.setText(globalValues.Get(GlobalValues.CarInfo.CURRENT_MILEAGE.toString()));
+
+//                                    upcomingRepairRecycleViewAdapter.ClearItems();
+
+//                                    try {
+//                                        for(int i = upcomingRepairRcyView.getChildCount() - 1; i >= 0; i--) {
+//                                        while (upcomingRepairListView.getChildCount() != 0) {
+////                                            handler.postDelayed(new Runnable() {
+////                                                @Override
+////                                                public void run() {
+////                                            v.animate().setDuration(500).x(-view.getWidth()).alpha(0f);
+////                                                    upcomingRepairArrayAdapter.remove(upcomingRepairArrayAdapter.getItem(0));
+                                                        upcomingRepairRecycleViewAdapter.RemoveItem(0);
+//
+////                                                    upcomingRepairArrayAdapter.notifyDataSetChanged();
+////                                                }
+////                                            }, 500);
+//                                        }
+//                                    } catch (Exception e){
+//                                        Exception ex;
+//                                        ex = e;
+//                                        //TODO remove when done
+//                                    }
+
+                                    if(upcomingRepairRcyView != null)
+                                        handler.postDelayed(new Runnable() {
+                                            @Override
+                                            public void run() {
+                                                SetUpcomingRepairList();
+                                            }
+                                        }, 5000);
                                 } else {
                                     //TODO behavior for if the text doesn't parse as int
                                 }
                             }
                         })
-                        .setNegativeButton(R.string.global_cancel, null)
+                        .setNegativeButton(R.string.global_cancel, new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                txtSwitcherCurrentMileage.setText(globalValues.Get(GlobalValues.CarInfo.CURRENT_MILEAGE.toString()));
+                            }
+                        })
                         .setOnDismissListener(new DialogInterface.OnDismissListener() {
                             //TODO works for now, but may need to start converting Activities to run on threads so UI updates can happen more fluidly
                             @Override
-                            public void onDismiss(final DialogInterface arg0) {
-                                try {
-                                    //delay animation
-                                    Thread.sleep(500);
-                                    txtSwitcherCurrentMileage.setText(globalValues.Get(GlobalValues.CarInfo.CURRENT_MILEAGE.toString()));
-                                } catch (InterruptedException e) {
-                                    e.printStackTrace();
-                                }
-                            }
+                            public void onDismiss(final DialogInterface arg0) {    }
                         });
                 AlertDialog carInputAlertDialog = builder.create();
                 carInputAlertDialog.show();
@@ -97,6 +124,10 @@ public class MainActivity extends AppCompatActivity {
         });
         //endregion
 
+        SetUpcomingRepairList();
+    }
+
+    private void SetUpcomingRepairList(){
         //region Upcoming Repairs
 
         //region Algorithm to determine which repairs to flag
@@ -109,19 +140,30 @@ public class MainActivity extends AppCompatActivity {
         for (Map.Entry<Enum, Object> lastRepairedEntry : lastRepaired.entrySet()){
             int repairScheduleValue = (int)repairSchedule.get(lastRepairedEntry.getKey());
             int lastRepairedValue = (int)lastRepairedEntry.getValue();
-
-            int nextRepairMileage = lastRepairedValue + repairScheduleValue;
-            int remainingMileage = nextRepairMileage - currentMileage;
+            int remainingMileage = (lastRepairedValue + repairScheduleValue) - currentMileage;
 
             if (remainingMileage <= notificationThreshold)
                 upcomingRepairs.put(lastRepairedEntry.getKey().toString(), remainingMileage);
         }
         //endregion
 
-        upcomingRepairListView = (ListView) findViewById(R.id.listViewUpcomingRepairs);
-        upcomingRepairArrayAdapter = new UpcomingRepairArrayAdapter(this, R.layout.upcoming_repair_item, new ArrayList<>(upcomingRepairs.keySet()), globalValues.Get(GlobalValues.CarInfo.CAR_NAME.toString()),
-                upcomingRepairs);
-        upcomingRepairListView.setAdapter(upcomingRepairArrayAdapter);
+        //TODO remove CarItemArrayAdapter when sure it's no longer useful (check RecyclerView api usage)
+//        upcomingRepairListView = (ListView) findViewById(R.id.listViewUpcomingRepairs);
+//        upcomingRepairArrayAdapter = new UpcomingRepairArrayAdapter(this, R.layout.upcoming_repair_item, new ArrayList<>(upcomingRepairs.keySet()), globalValues.Get(GlobalValues.CarInfo.CAR_NAME.toString()),
+//                upcomingRepairs);
+//        upcomingRepairListView.setAdapter(upcomingRepairArrayAdapter);
+
+        upcomingRepairRcyView = (RecyclerView) findViewById(R.id.rcyViewUpcomingRepairs);
+        upcomingRepairRecycleViewAdapter = new UpcomingRepairRecycleViewAdapter(this, upcomingRepairs);
+        UpcomingRepairRecyclerViewAnimator animator1 = new UpcomingRepairRecyclerViewAnimator(this);
+        DefaultItemAnimator animator = new DefaultItemAnimator();
+        animator.setAddDuration(2000);
+        animator.setRemoveDuration(2000);
+        upcomingRepairRcyView.setLayoutManager(new LinearLayoutManager(this));
+        upcomingRepairRcyView.setAdapter(upcomingRepairRecycleViewAdapter);
+        upcomingRepairRcyView.setItemAnimator(animator1);
+
+
         //endregion
     }
 

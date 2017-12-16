@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android" >
+    <!-- TODO handle for lower api -->
+    <item
+        android:drawable="@drawable/plus_positive_img"
+        android:width="20sp"
+        android:height="20sp"
+        />
+</layer-list >

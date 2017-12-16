@@ -57,7 +57,7 @@
         </TextSwitcher>
 
         <TextView
-            android:id="@+id/txtViewMileAbbreviation"
+            android:id="@+id/txtMileAbbreviation"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="2"

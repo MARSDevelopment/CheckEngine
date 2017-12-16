@@ -28,6 +28,44 @@
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.0">
 
+        <TableRow
+            android:id="@+id/tblrAddCar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center">
+
+            <TextView
+                android:id="@+id/txtAddCar"
+                android:layout_width="wrap_content"
+                android:layout_height="40sp"
+                android:layout_gravity="center"
+                android:drawableLeft="@drawable/plus_icon"
+                android:gravity="center"
+                android:paddingTop="10sp"
+                android:drawablePadding="8sp"
+                android:text="@string/garage_add_car"
+                android:textSize="18sp"
+                android:drawableStart="@drawable/plus_icon" />
+        </TableRow>
+
+        <TextView
+            android:id="@+id/txtGarageOrDivider"
+            android:layout_width="match_parent"
+            android:textSize="13sp"
+            android:layout_height="34sp"
+            android:text="---- OR ----"
+            android:gravity="center"  />
+
+        <TextView
+            android:id="@+id/txtChooseGarageCar"
+            android:layout_width="match_parent"
+            android:layout_height="40sp"
+            android:layout_gravity="center_vertical"
+            android:paddingBottom="10sp"
+            android:gravity="center"
+            android:text="@string/garage_choose_vehicle"
+            android:textSize="20sp" />
+
         <ExpandableListView
             android:id="@+id/expandableListViewGarage"
             android:layout_width="match_parent"

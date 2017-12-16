@@ -4,10 +4,12 @@ import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.AccelerateInterpolator;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
+import android.view.animation.TranslateAnimation;
 import android.widget.BaseExpandableListAdapter;
-import android.widget.CheckBox;
 import android.widget.CompoundButton;
-import android.widget.TextView;
 
 import java.util.List;
 
@@ -17,10 +19,12 @@ import java.util.List;
 
 public class CarInfoExpandableListAdapter extends BaseExpandableListAdapter {
 
-    //region Private Variables
+    //region Variables
     private Context context;
     private List<CarInfo> carList;
     private CarInfoDBHandler carInfoDBHandler;
+    private enum Mode {EXPANDED, COLLAPSED}
+    private Enum modeHolder;
     //endregion
 
     //region Constructors
@@ -28,6 +32,7 @@ public class CarInfoExpandableListAdapter extends BaseExpandableListAdapter {
         this.context = context;
         this.carList = carList;
         carInfoDBHandler = new CarInfoDBHandler(context, null);
+        modeHolder = Mode.COLLAPSED;
     }
     //endregion
 
@@ -39,7 +44,7 @@ public class CarInfoExpandableListAdapter extends BaseExpandableListAdapter {
 
     @Override
     public int getChildrenCount(int groupPosition) {
-        //since only one child (that contains all the information we want in the dropdown) is used per parent
+        //since only one child is used per parent (it contains all the information we want in the dropdown)
         return 1;
     }
 
@@ -75,55 +80,81 @@ public class CarInfoExpandableListAdapter extends BaseExpandableListAdapter {
             convertView = inflater.inflate(R.layout.car_info_parent_item, null);
         }
 
-        try{
-            CarInfo carInfo = (CarInfo) getGroup(groupPosition);
-            TextView txtName = (TextView) convertView.findViewById(R.id.txtCarInfoName);
-            TextView txtCurrentMileage = (TextView) convertView.findViewById(R.id.txtCarInfoCurrentMileage);
-            CheckBox chkBoxInUse = (CheckBox) convertView.findViewById(R.id.chkBoxCarInfoInUse);
+        CarInfo carInfo = (CarInfo) getGroup(groupPosition);
+        ComponentContainers.CarInfoListItemParent listItemParent = new ComponentContainers.CarInfoListItemParent(convertView);
 
-            txtName.setText(carInfo.getName());
-            txtCurrentMileage.setText(String.valueOf(carInfo.getCurrentMileage()));
-            //below allows for only one checkbox to be checked at a time
-            chkBoxInUse.setOnCheckedChangeListener(null);
-            chkBoxInUse.setChecked(carInfo.getInUse());
-            chkBoxInUse.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-                @Override
-                public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                    UnsetPreviousCarInUse();
-                    SetNewCarInUse(groupPosition);
-                    //refresh adapter
-                    notifyDataSetChanged();
-                }
-            });
-        }catch (Exception e){
-            Exception ex = e;
-        }
+        listItemParent.itemName.setText(carInfo.getName());
+        listItemParent.itemMileage.setText(String.valueOf(carInfo.getCurrentMileage()));
+        //below allows for only one checkbox to be checked at a time
+        listItemParent.itemInUse.setOnCheckedChangeListener(null);
+        listItemParent.itemInUse.setChecked(carInfo.getInUse());
+        listItemParent.itemInUse.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                UnsetPreviousCarInUse();
+                SetNewCarInUse(groupPosition);
+                //refresh adapter to update UI
+                notifyDataSetChanged();
+            }
+        });
 
         return convertView;
     }
 
     @Override
     public View getChildView(int groupPosition, int childPosition, boolean isLastChild, View convertView, ViewGroup parent) {
-       if (convertView == null){
+        if (convertView == null){
            LayoutInflater inflater  = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
            convertView = inflater.inflate(R.layout.car_info_child_item, null);
-       }
+        }
 
-       try{
-            CarInfo carInfo = (CarInfo) getChild(groupPosition, childPosition);
-            TextView txtMakeValue = (TextView) convertView.findViewById(R.id.txtCarInfoMakeValue);
-            TextView txtModelValue = (TextView) convertView.findViewById(R.id.txtCarInfoModelValue);
-            TextView txtYearValue = (TextView) convertView.findViewById(R.id.txtCarInfoYearValue);
+        CarInfo carInfo = (CarInfo) getChild(groupPosition, childPosition);
+        ComponentContainers.CarInfoListItemChild listItemChild = new ComponentContainers.CarInfoListItemChild(convertView);
 
-            txtMakeValue.setText(carInfo.getMake());
-            txtModelValue.setText(carInfo.getModel());
-            txtYearValue.setText(String.valueOf(carInfo.getYear()));
-       } catch (Exception e){
-           Exception ex = e;
-       }
+        listItemChild.carMakeValue.setText(carInfo.getMake());
+        listItemChild.carModelValue.setText(carInfo.getModel());
+        listItemChild.carYearValue.setText(String.valueOf(carInfo.getYear()));
+//        TranslateAnimation animation;
+//
+//        if(modeHolder == Mode.COLLAPSED){
+//            //expand
+//            animation = new TranslateAnimation(0.0f, 0.0f, -convertView.getHeight(), 0.0f);
+//            convertView.setVisibility(View.VISIBLE);
+//        }else{
+//            //collapse
+//            animation = new TranslateAnimation(0.0f, 0.0f, 0.0f, -convertView.getHeight());
+//            final View finalConvertView = convertView;
+//            Animation.AnimationListener collapseListener = new Animation.AnimationListener() {
+//                @Override
+//                public void onAnimationStart(Animation animation) {
+//                }
+//
+//                @Override
+//                public void onAnimationRepeat(Animation animation) {
+//                }
+//
+//                @Override
+//                public void onAnimationEnd(Animation animation) {
+//                    finalConvertView.setVisibility(View.GONE);
+//                }
+//            };
+//
+//            animation.setAnimationListener(collapseListener);
+//        }
+//
+//
+//        animation.setDuration(300);
+//        animation.setInterpolator(new AccelerateInterpolator(0.5f));
+//        convertView.setAnimation(animation);
 
+//        Animation animation = AnimationUtils.loadAnimation(context, R.anim.slide_down);
+//        animation.setDuration(1500);
+//        convertView.setAnimation(animation);
         return convertView;
     }
+
+
+
 
     @Override
     public boolean isChildSelectable(int groupPosition, int childPosition) {
@@ -132,6 +163,10 @@ public class CarInfoExpandableListAdapter extends BaseExpandableListAdapter {
     //endregion
 
     //region Helper Methods
+    public void ExpandOrCollapse(final View v, Mode mode) {
+
+    }
+
     private void UnsetPreviousCarInUse() {
         //loop through the list and remove check mark on the one currently selected
         for(CarInfo car : carList) {
@@ -146,9 +181,15 @@ public class CarInfoExpandableListAdapter extends BaseExpandableListAdapter {
         CarInfo carInfo = carList.get(position);
         GlobalValues globalValues = new GlobalValues(context);
         carInfo.setInUse(true);
-        carInfoDBHandler.UpdateCarInUse(carList.get(position).getName(), true);
-        globalValues.Set(GlobalValues.CarInfo.CAR_NAME.toString(), carInfo.getName());
-        globalValues.Set(GlobalValues.CarInfo.CURRENT_MILEAGE.toString(), String.valueOf(carInfo.getCurrentMileage()));
+
+        try{
+            carInfoDBHandler.UpdateCarInUse(carList.get(position).getName(), true);
+            globalValues.Set(GlobalValues.CarInfo.CAR_NAME.toString(), carInfo.getName());
+            globalValues.Set(GlobalValues.CarInfo.CURRENT_MILEAGE.toString(), String.valueOf(carInfo.getCurrentMileage()));
+        }catch (Exception e){
+            //TODO handle exceptions
+            Exception ex = e;
+        }
     }
     //endregion
 }

@@ -10,22 +10,24 @@
     <string name="global_placeholder">PlaceHolder</string>
     <string name="global_cancel">Cancel</string>
     <string name="global_save">Save</string>
+    <string name="global_delete">Delete</string>
+    <string name="global_edit">Edit</string>
     <string name="global_tap_to_update">Tap To Update</string>
 
 
-    //Dropdown Menu Strings
+    //Dropdown Menu
     <string name="action_home">Home</string>
     <string name="action_repair_schedule">Repair Schedule</string>
     <string name="action_last_repaired">Last Repaired</string>
     <string name="action_notifications">Notifications</string>
     <string name="action_garage">Garage</string>
 
-    //Car Categories Strings
+    //Car Categories
     <string name="engine">Engine</string>
     <string name="wheels">Wheels</string>
     <string name="fluids">Fluids</string>
 
-    //Car Item Strings
+    //Car Items
     <string name="timing_belts">Timing Belts</string>
     <string name="solenoid">Solenoid</string>
     <string name="alternator">Alternator</string>
@@ -71,9 +73,23 @@
 
     //Garage
     <string name="garage_title">Garage</string>
+    <string name="garage_add_car">Add A Ride</string>
+    <string name="garage_choose_vehicle">Choose Your Vehicle</string>
     <string name="garage_make">Make</string>
     <string name="garage_model">Model</string>
     <string name="garage_year">Year</string>
+
+    //Car Info Input
+    <string name="car_input_add_car"><u>Add A Ride</u></string>
+    <string name="car_input_hint"><i>Please fill out the entire form</i></string>
+    <string name="car_input_create_defaults">Create With Defaults</string>
+    <string name="car_input_create_last_repaired">Set Last Repair</string>
+    <string name="car_input_name">Car Name</string>
+    <string name="car_input_current_mileage">Current Mileage</string>
+    <string name="car_input_make">Make</string>
+    <string name="car_input_model">Model</string>
+    <string name="car_input_year">Year</string>
+    <string name="car_info_delete_edit_message">What Would You Like To Do?</string>
 
 
 </resources>

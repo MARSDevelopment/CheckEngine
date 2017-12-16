@@ -1,8 +1,10 @@
 package com.example.action_laptop.checkengine;
 
+import android.app.Dialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -14,6 +16,7 @@ import android.view.View;
 import android.view.animation.AnimationUtils;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.Spinner;
@@ -49,39 +52,37 @@ public class NotificationsActivity extends AppCompatActivity {
                     //initialize dialog box
                     v = LayoutInflater.from(NotificationsActivity.this).inflate(R.layout.car_item_input_dialog, null);
                     //set dialog box components' properties and behaviors
-                    final ComponentContainers.InputDialog inputDialog = new ComponentContainers.InputDialog(v);
-                    inputDialog.txtViewInputHeader.setText(Html.fromHtml("<u>"+getResources().getString(R.string.notification_frequency)+"</u>"));
-                    inputDialog.editViewInputValue.setText(globalValues.Get(NotificationsTable.TableColumns.MILEAGE_THRESHOLD_COLUMN.toString()));
+                    final ComponentContainers.SingleInputDialog singleInputDialogBody = new ComponentContainers.SingleInputDialog(v);
+                    singleInputDialogBody.inputHeader.setText(Html.fromHtml("<u>"+getResources().getString(R.string.notification_frequency)+"</u>"));
+                    singleInputDialogBody.inputValue.setText(globalValues.Get(NotificationsTable.TableColumns.MILEAGE_THRESHOLD_COLUMN.toString()));
                     //pop up dialog behavior for updating current mileage
                     AlertDialog.Builder builder = new AlertDialog.Builder(NotificationsActivity.this);
                     builder.setView(v)
                             .setPositiveButton(R.string.global_save, new DialogInterface.OnClickListener() {
                                 @Override
                                 public void onClick(DialogInterface dialogInterface, int which) {
-                                    //behavior for when Save is clicked
-                                    if(Validator.TryParseToInt(inputDialog.editViewInputValue.getText().toString())){
-                                        SaveNotificationValue(NotificationsTable.TableColumns.MILEAGE_THRESHOLD_COLUMN.toString(), Integer.parseInt(inputDialog.editViewInputValue.getText().toString()));
-                                    } else {
-                                        //TODO behavior for if the text doesn't parse as int
-                                    }
+                                    //IMPORTANT - Validation and dialog behavior handled in MileageThresholdSaveListener
                                 }
                             })
                             .setNegativeButton(R.string.global_cancel, null)
                             .setOnDismissListener(new DialogInterface.OnDismissListener() {
-                                //TODO works for now, but may need to start converting Activities to run on threads so UI updates can happen more fluidly
                                 @Override
                                 public void onDismiss(final DialogInterface arg0) {
-                                    try {
-                                        //delay animation
-                                        Thread.sleep(500);
-                                        txtSwitcherMileageThresholdValue.setText(globalValues.Get(NotificationsTable.TableColumns.MILEAGE_THRESHOLD_COLUMN.toString()));
-                                    } catch (InterruptedException e) {
-                                        e.printStackTrace();
-                                    }
+                                    Handler handler = new Handler();
+                                    handler.postDelayed(new Runnable() {
+                                        @Override
+                                        public void run() {
+                                            //delay for dramatic effect
+                                            txtSwitcherMileageThresholdValue.setText(globalValues.Get(NotificationsTable.TableColumns.MILEAGE_THRESHOLD_COLUMN.toString()));
+                                        }
+                                    }, 500);
                                 }
                             });
                     AlertDialog carInputAlertDialog = builder.create();
                     carInputAlertDialog.show();
+                    //set MileageThresholdSaveListener as positive button click event
+                    Button positiveBtn = carInputAlertDialog.getButton(DialogInterface.BUTTON_POSITIVE);
+                    positiveBtn.setOnClickListener(new MileageThresholdSaveListener(carInputAlertDialog, singleInputDialogBody));
                 }
             });
             //endregion
@@ -94,7 +95,7 @@ public class NotificationsActivity extends AppCompatActivity {
             notificationFrequencyAdapter.setDropDownViewResource(R.layout.notification_frequency_spinner_item);
             spinnerFrequencyNotification.setAdapter(notificationFrequencyAdapter);
             spinnerFrequencyNotification.setSelection(Integer.parseInt(globalValues.Get(NotificationsTable.TableColumns.FREQUENCY_COLUMN.toString())));
-            //.post() added to ensure the spinner is tapped before firing the listener. previously, listener fired after being created for some reason
+            //.post() added to ensure the spinner is tapped before firing the listener. previously, listener fired after being instantiated for some reason
             spinnerFrequencyNotification.post(new Runnable() {
                 @Override
                 public void run() {
@@ -171,5 +172,41 @@ public class NotificationsActivity extends AppCompatActivity {
     }
 
 
+    //endregion
+
+    //region Custom OnClickListener class designed specifically to validate and handle the Mileage Threshold dialog pop up
+    private class MileageThresholdSaveListener implements View.OnClickListener {
+        private final Dialog dialog;
+        private final ComponentContainers.SingleInputDialog singleInputDialogBody;
+
+        public MileageThresholdSaveListener(Dialog dialog, ComponentContainers.SingleInputDialog singleInputDialogBody) {
+            this.dialog = dialog;
+            this.singleInputDialogBody = singleInputDialogBody;
+        }
+
+        @Override
+        public void onClick(View v) {
+            String mileageThreshold = singleInputDialogBody.inputValue.getText().toString();
+            boolean errors = false;
+
+            //region Dialog Input Validation
+            if(mileageThreshold.length() == 0) {
+                singleInputDialogBody.inputValue.setError("Please enter a value");
+                errors = true;
+            }else if(!Validator.TryParseToInt(mileageThreshold)) {
+                singleInputDialogBody.inputValue.setError("This field can only contain numbers");
+                errors = true;
+            }else if(mileageThreshold.length() > 6) {
+                singleInputDialogBody.inputValue.setError("Please enter a value below 999,999");
+                errors = true;
+            }
+            //endregion
+
+            if(!errors){
+                SaveNotificationValue(NotificationsTable.TableColumns.MILEAGE_THRESHOLD_COLUMN.toString(), Integer.parseInt(singleInputDialogBody.inputValue.getText().toString()));
+                dialog.dismiss();
+            }
+        }
+    }
     //endregion
 }

@@ -11,7 +11,7 @@
 
     <LinearLayout
         style="?android:absListViewStyle"
-        android:id="@+id/txtViewHomeComponentContainer"
+        android:id="@+id/linLayoutHomeContainer"
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:layout_marginBottom="0dp"
@@ -31,20 +31,21 @@
         app:layout_constraintVertical_bias="0.0">
 
         <LinearLayout
-            android:id="@+id/linearLayoutCurrentMilageContainer"
+            android:id="@+id/linLayoutCurrentMileageContainer"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical">
 
             <TextView
-                android:id="@+id/txtViewHomeCurrentMileageHeader"
+                android:id="@+id/txtHomeCurrentMileageHeader"
                 android:layout_width="match_parent"
-                android:layout_height="36dp"
+                android:layout_height="42dp"
                 android:gravity="bottom|center"
                 android:paddingEnd="5sp"
                 android:paddingLeft="5sp"
                 android:paddingRight="5sp"
                 android:paddingStart="5sp"
+                android:paddingTop="20sp"
                 android:text="@string/home_current_mileage"
                 android:textSize="20sp" />
 
@@ -85,16 +86,26 @@
             android:paddingBottom="4sp"
             android:paddingLeft="12sp"
             android:paddingRight="12sp"
-            android:paddingTop="10sp"
+            android:paddingTop="25sp"
             android:text="@string/home_upcoming_repairs"
-            android:textSize="17sp" />
+            android:textSize="20sp" />
 
-        <ListView
-            android:id="@+id/listViewUpcomingRepairs"
+        <!--<ListView-->
+            <!--android:id="@+id/listViewUpcomingRepairs"-->
+            <!--android:layout_width="match_parent"-->
+            <!--android:layout_height="match_parent"-->
+            <!--android:paddingLeft="10sp"-->
+            <!--android:paddingRight="10sp"-->
+            <!--android:paddingTop="5sp" />-->
+
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/rcyViewUpcomingRepairs"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:paddingLeft="10sp"
             android:paddingRight="10sp"
-            android:paddingTop="5sp" />
+            android:paddingTop="5sp">
+
+        </android.support.v7.widget.RecyclerView>
     </LinearLayout>
 </android.support.constraint.ConstraintLayout>
